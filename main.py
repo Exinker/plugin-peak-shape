@@ -1,4 +1,10 @@
 import logging
+import sys
+sys.path.extend([
+    r'C:\Atom x64 3.3 (2024.03.02)\Plugins\python\env',
+    r'C:\Atom x64 3.3 (2024.03.02)\Plugins\python\env\Lib\site-packages',
+])
+
 
 from src.config import DEFAULT_SHAPE, MAX_WORKERS, QUIET
 from src.interfaces.callbacks import AbstractCallback, STDOUTCallback
