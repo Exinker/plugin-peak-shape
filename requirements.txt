@@ -1,0 +1,9 @@
+matplotlib==3.9.0
+numpy==1.26.4
+pandas==2.2.2
+PySide6==6.8.0
+python-dotenv==1.0.1
+scipy==1.13.0
+tqdm==4.66.4
+
+spectrumlab @ git+https://github.com/Exinker/spectrumlab-tiny.git
