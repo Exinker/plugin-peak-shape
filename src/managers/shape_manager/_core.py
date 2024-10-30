@@ -1,5 +1,6 @@
 import logging
 from collections.abc import Sequence
+from multiprocessing import Pool
 
 from spectrumlab.noise import Noise
 from spectrumlab.peak.shape import Shape, restore_shape_from_spectrum
@@ -66,18 +67,24 @@ def restore_shapes(
     )
 
     shapes = []
-    for n, spectrum in enumerate(spectra):
-        shape = restore_shape((n, spectrum, default_shape))
-        shapes.append(shape)
+    with Pool(n_workers) as pool:
+        for shape in pool.imap(
+            restore_shape,
+            [
+                (n, spectrum, default_shape)
+                for n, spectrum in enumerate(spectra)
+            ],
+        ):  # TODO: проверить в тестах, что очередь сохраняется!
+            shapes.append(shape)
 
-        n, total = len(shapes), n_shapes
-        callback(
-            progress=100*n/total,
-            info='<strong>PLEASE, WAIT!</strong>',
-            message='SHAPE ESTIMATION: {n}/{total} is complited!'.format(
-                n=n,
-                total=total,
-            ),
-        )
+            n, total = len(shapes), n_shapes
+            callback(
+                progress=100*n/total,
+                info='<strong>PLEASE, WAIT!</strong>',
+                message='SHAPE ESTIMATION: {n}/{total} is complited!'.format(
+                    n=n,
+                    total=total,
+                ),
+            )
 
     return tuple(shapes)
