@@ -1,13 +1,11 @@
 import logging
 import os
 import sys
-
 root, _ = os.path.split(__file__)
 sys.path.extend([
     os.path.join(root, r'env'),
     os.path.join(root, r'env\Lib\site-packages'),
 ])
-
 
 from src.config import DEFAULT_SHAPE, MAX_WORKERS, QUIET
 from src.interfaces.callbacks import AbstractCallback, NullCallback
