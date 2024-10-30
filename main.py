@@ -64,7 +64,6 @@ def process_xml(
 
 if __name__ == '__main__':
     result = process_xml(
-        # config_xml=r'<input>C:\Atom x64 3.3 (2024.03.02)\Temp\py_spe.xml</input>',
-        config_xml=r'<input>./data/py_spe.xml</input>',
+        config_xml=r'<input>C:\Atom x64 3.3 (2024.03.02)\Temp\py_spe.xml</input>',
     )
     print(result)
