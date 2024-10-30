@@ -8,7 +8,7 @@ class AbstractCallback(ABC):
         raise NotImplementedError
 
 
-class STDOUTCallback(AbstractCallback):
+class NullCallback(AbstractCallback):
 
     def __call__(self, *args, **kwargs) -> None:
-        print(args, kwargs)
+        pass
