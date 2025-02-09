@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "peak-shape-plugin"
+version = "0.1.0"
+description = "Atom plugin for peak's shape estimation."
+readme = "README.md"
+keywords = [
+    "spectroscopy",
+    "atomic emission spectroscopy",
+    "peak shape profile",
+    "linear detector",
+]
+authors = [
+    {name = "Pavel Vaschenko", email="vaschenko@vmk.ru"},
+]
+maintainers = [
+    {name = "Pavel Vaschenko", email="vaschenko@vmk.ru"},
+]
+license = {text = "MIT License"}
+dependencies = [
+    "pyside6>=6.8.2.1",
+    "python-dotenv>=1.0.1",
+    "spectrumlab-tiny",
+]
+requires-python = ">=3.12"
+
+[dependency-groups]
+linting = [
+    "flake8",
+    "flake8-commas",
+    "flake8-import-order",
+    "flake8-bugbear",
+    "flake8-builtins",
+    "pep8-naming",
+]
+testing = [
+    "pytest",
+    "pytest-cov",
+]
+notebook = [
+    "jupyter>=1.1.1",
+]
+dev = [
+    {include-group = "linting"},
+    {include-group = "testing"},
+    {include-group = "notebook"},
+    "pre-commit>=4.0.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.csv", "*.md", "*.txt", "*.xml"]
+
+[tool.uv.sources]
+spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "0.1.0" }
