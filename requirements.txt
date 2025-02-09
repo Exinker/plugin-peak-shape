@@ -1,6 +1,0 @@
-matplotlib
-numpy
-PySide6
-python-dotenv
-
-spectrumlab @ git+https://github.com/Exinker/spectrumlab-tiny.git

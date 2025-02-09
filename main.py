@@ -1,65 +1,72 @@
 import logging
 import os
 import sys
+
 root, _ = os.path.split(__file__)
 sys.path.extend([
-    os.path.join(root, r'env'),
-    os.path.join(root, r'env\Lib\site-packages'),
+    os.path.join(root, r'.venv'),
+    os.path.join(root, r'.venv\Lib\site-packages'),
+    os.path.join(root, r'src'),
 ])
 
-from src.config import DEFAULT_SHAPE, MAX_WORKERS, QUIET
-from src.interfaces.callbacks import AbstractCallback, NullCallback
-from src.interfaces.gui import observe
-from src.logger import *
-from src.managers.data_manager import DataManager, DataManagerError
-from src.managers.report_manager import ReportManager, ReportManagerError
-from src.managers.shape_manager import ShapeManager, ShapeManagerError
-from src.types import XML
+from plugin.config import DEFAULT_SHAPE, LOGGING_LEVEL, MAX_WORKERS, QUIET
+from plugin.interfaces.callbacks import NullCallback
+from plugin.loggers import *
+from plugin.managers.data_manager import DataManager, DataManagerError
+from plugin.managers.report_manager import ReportManager, ReportManagerError
+from plugin.managers.shape_manager import ShapeManager, ShapeManagerError
+from plugin.types import XML
 
 
 LOGGER = logging.getLogger('app')
+LOGGER.info('DEFAULT_SHAPE: %s', DEFAULT_SHAPE)
+LOGGER.info('LOGGING_LEVEL: %s', LOGGING_LEVEL)
+LOGGER.info('MAX_WORKERS: %s', MAX_WORKERS)
+LOGGER.info('QUIET: %s', QUIET)
 
 
-@observe(quiet=False)  # FIXME: не подгружается переменная
-def process_xml(
-    config_xml: XML,
-    callback: AbstractCallback | None = None,
-) -> str:
-    callback = callback or NullCallback()
+CALLBACK = NullCallback()
 
-    data_manager = DataManager(
-        xml=config_xml,
-        callback=callback,
-    )
+
+# @observe(quiet=QUIET)  # FIXME: не подгружается переменная
+def process_xml(config_xml: XML) -> str:  # TODO: добавить в сигнатуру передачу переменной `callback`;
+
     try:
-        data = data_manager.parse()
-    except DataManagerError:
-        return ''
-
-    shape_manager = ShapeManager(
-        default_shape=DEFAULT_SHAPE,
-        max_workers=MAX_WORKERS,
-        callback=callback,
-    )
-    try:
-        shapes = shape_manager.restore(
-            spectra=data.spectra,
+        data_manager = DataManager(
+            xml=config_xml,
+            callback=CALLBACK,
         )
-    except ShapeManagerError:
-        return ''
+        try:
+            data = data_manager.parse()
+        except DataManagerError:
+            return ''
 
-    report_manager = ReportManager(
-        default_shape=DEFAULT_SHAPE,
-    )
-    try:
-        report = report_manager.build(
-            shapes=shapes,
-            dump=True,
+        shape_manager = ShapeManager(
+            default_shape=DEFAULT_SHAPE,
+            max_workers=MAX_WORKERS,
+            callback=CALLBACK,
         )
-    except ReportManagerError:
-        return ''
+        try:
+            shapes = shape_manager.restore(
+                spectra=data.spectra,
+            )
+        except ShapeManagerError:
+            return ''
 
-    return report
+        report_manager = ReportManager(
+            default_shape=DEFAULT_SHAPE,
+        )
+        try:
+            report = report_manager.build(
+                shapes=shapes,
+                dump=True,
+            )
+        except ReportManagerError:
+            return ''
+
+        return report
+    finally:
+        LOGGER.info('Restoring shapes is completed!')
 
 
 if __name__ == '__main__':

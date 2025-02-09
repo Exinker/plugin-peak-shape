@@ -1,27 +1,26 @@
-.coverage
-.coverage.*
 .git/
 .mypy_cache/
 .pytest_cache/
+.venv/
 .vscode/
-.VSCodeCounter/
 __pycache__/
 *.egg-info/
 
 atom/
-data/
-env/
 build/
 data/
+dist/
 htmlcov/
 tests/
 
-*.log
+.coverage
+*.dat
+*.env
 *.in
+*.ipynb
+*.log
 *.xml
 
-.env
 .*.py
-.*.ipynb
 .*.json
 .*.ini
