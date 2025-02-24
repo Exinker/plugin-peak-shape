@@ -12,8 +12,6 @@ class ProgressWindow(QtWidgets.QWidget):
         super().__init__(*args, **kwargs)
 
         self.setObjectName('progressWindow')
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         # flags
         flags = flags or (QtCore.Qt.WindowType.Window, QtCore.Qt.WindowType.WindowStaysOnTopHint)

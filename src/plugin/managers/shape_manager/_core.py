@@ -60,7 +60,7 @@ def restore_shapes(
     callback(
         progress=100*n/total,
         info='<strong>PLEASE, WAIT!</strong>',
-        message='SHAPE ESTIMATION: {n}/{total} is complited!'.format(
+        message='SHAPE ESTIMATION: {n}/{total} are complited!'.format(
             n=n,
             total=total,
         ),
@@ -81,7 +81,7 @@ def restore_shapes(
             callback(
                 progress=100*n/total,
                 info='<strong>PLEASE, WAIT!</strong>',
-                message='SHAPE ESTIMATION: {n}/{total} is complited!'.format(
+                message='SHAPE ESTIMATION: {n}/{total} are complited!'.format(
                     n=n,
                     total=total,
                 ),

@@ -52,7 +52,7 @@ def parse_quiet() -> bool:
         return DEFAULT_QUIET
 
     try:
-        quiet = quiet == 'True'
+        quiet = quiet.lower() == 'true'
     except Exception:
         LOGGER.warning(
             'Parse `QUIET` is failed!',

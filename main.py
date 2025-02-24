@@ -10,7 +10,8 @@ sys.path.extend([
 ])
 
 from plugin.config import DEFAULT_SHAPE, LOGGING_LEVEL, MAX_WORKERS, QUIET
-from plugin.interfaces.callbacks import NullCallback
+from plugin.interfaces.callbacks import AbstractCallback, NullCallback
+from plugin.interfaces.gui import observe
 from plugin.loggers import *
 from plugin.managers.data_manager import DataManager, DataManagerError
 from plugin.managers.report_manager import ReportManager, ReportManagerError
@@ -25,48 +26,53 @@ LOGGER.info('MAX_WORKERS: %s', MAX_WORKERS)
 LOGGER.info('QUIET: %s', QUIET)
 
 
-CALLBACK = NullCallback()
+def process_xml(config_xml: XML) -> str:
 
+    @observe(quiet=QUIET)
+    def wrapped(
+        config_xml: XML,
+        callback: AbstractCallback | None,
+    ) -> str:
+        callback = callback or NullCallback()
 
-# @observe(quiet=QUIET)  # FIXME: не подгружается переменная
-def process_xml(config_xml: XML) -> str:  # TODO: добавить в сигнатуру передачу переменной `callback`;
-
-    try:
-        data_manager = DataManager(
-            xml=config_xml,
-            callback=CALLBACK,
-        )
         try:
-            data = data_manager.parse()
-        except DataManagerError:
-            return ReportManager.default()
-
-        shape_manager = ShapeManager(
-            default_shape=DEFAULT_SHAPE,
-            max_workers=MAX_WORKERS,
-            callback=CALLBACK,
-        )
-        try:
-            shapes = shape_manager.restore(
-                spectra=data.spectra,
+            data_manager = DataManager(
+                xml=config_xml,
+                callback=callback,
             )
-        except ShapeManagerError:
-            return ReportManager.default()
+            try:
+                data = data_manager.parse()
+            except DataManagerError:
+                return ReportManager.default()
 
-        report_manager = ReportManager(
-            default_shape=DEFAULT_SHAPE,
-        )
-        try:
-            report = report_manager.build(
-                shapes=shapes,
-                dump=True,
+            shape_manager = ShapeManager(
+                default_shape=DEFAULT_SHAPE,
+                max_workers=MAX_WORKERS,
+                callback=callback,
             )
-        except ReportManagerError:
-            return ReportManager.default()
+            try:
+                shapes = shape_manager.restore(
+                    spectra=data.spectra,
+                )
+            except ShapeManagerError:
+                return ReportManager.default()
 
-        return report
-    finally:
-        LOGGER.info('Restoring shapes is completed!')
+            report_manager = ReportManager(
+                default_shape=DEFAULT_SHAPE,
+            )
+            try:
+                report = report_manager.build(
+                    shapes=shapes,
+                    dump=True,
+                )
+            except ReportManagerError:
+                return ReportManager.default()
+
+            return report
+        finally:
+            LOGGER.info('Restoring shapes are completed!')
+
+    return wrapped(config_xml=config_xml)
 
 
 if __name__ == '__main__':
