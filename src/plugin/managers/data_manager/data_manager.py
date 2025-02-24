@@ -4,6 +4,7 @@ import time
 from plugin.dto import AtomData
 from plugin.interfaces.callbacks import AbstractCallback
 from plugin.managers.data_manager.exceptions import (
+    DataManagerError,
     LoadDataXMLError,
     ParseDataXMLError,
     ParseFilepathXMLError,
@@ -68,8 +69,8 @@ class DataManager:
         try:
             data = AtomDataParser.parse(filepath)
             return data
-        except (LoadDataXMLError, ParseDataXMLError):
-            return ''
+        except (LoadDataXMLError, ParseDataXMLError) as error:
+            raise DataManagerError from error
         finally:
             if LOGGER.isEnabledFor(logging.INFO):
                 LOGGER.info(

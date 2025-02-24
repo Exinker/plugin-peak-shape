@@ -6,6 +6,8 @@ from spectrumlab.peaks.shape import Shape
 
 T = NewType('T', Mapping[str, Any])
 
+REPORT_PREFIX = '<?xml version="1.0" encoding="UTF-8"?>'
+
 
 class ReportManager:
 
@@ -35,7 +37,7 @@ class ReportManager:
             results.append(result)
 
         report = '{prefix}<shapes>{results}</shapes>'.format(
-            prefix='<?xml version="1.0" encoding="UTF-8"?>',
+            prefix=REPORT_PREFIX,
             results=wrap(results),
         )
 
@@ -45,6 +47,16 @@ class ReportManager:
             )
 
         return report
+
+    @classmethod
+    def default(cls) -> str:
+        return '{prefix}{message}'.format(
+            prefix=REPORT_PREFIX,
+            message=wrap({'message': '\n'.join([
+                'Restoring shapes is failed!',
+                'Open `${ATOM_PATH}/Data/.log` to more information.',
+            ])}),
+        )
 
     @staticmethod
     def dump(

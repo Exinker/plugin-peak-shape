@@ -39,7 +39,7 @@ def process_xml(config_xml: XML) -> str:  # TODO: добавить в сигна
         try:
             data = data_manager.parse()
         except DataManagerError:
-            return ''
+            return ReportManager.default()
 
         shape_manager = ShapeManager(
             default_shape=DEFAULT_SHAPE,
@@ -51,7 +51,7 @@ def process_xml(config_xml: XML) -> str:  # TODO: добавить в сигна
                 spectra=data.spectra,
             )
         except ShapeManagerError:
-            return ''
+            return ReportManager.default()
 
         report_manager = ReportManager(
             default_shape=DEFAULT_SHAPE,
@@ -62,7 +62,7 @@ def process_xml(config_xml: XML) -> str:  # TODO: добавить в сигна
                 dump=True,
             )
         except ReportManagerError:
-            return ''
+            return ReportManager.default()
 
         return report
     finally:
