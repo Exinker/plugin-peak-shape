@@ -568,7 +568,7 @@ name = "ipykernel"
 version = "6.29.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "appnope", marker = "platform_system == 'Darwin'" },
+    { name = "appnope", marker = "sys_platform == 'darwin'" },
     { name = "comm" },
     { name = "debugpy" },
     { name = "ipython" },
@@ -1312,7 +1312,7 @@ testing = [
 requires-dist = [
     { name = "pyside6", specifier = ">=6.8.2.1" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
-    { name = "spectrumlab-tiny", git = "https://github.com/Exinker/spectrumlab-tiny?rev=0.1.0" },
+    { name = "spectrumlab-tiny", git = "https://github.com/Exinker/spectrumlab-tiny?rev=master" },
 ]
 
 [package.metadata.requires-dev]
@@ -1933,7 +1933,7 @@ wheels = [
 [[package]]
 name = "spectrumlab-tiny"
 version = "0.1.0"
-source = { git = "https://github.com/Exinker/spectrumlab-tiny?rev=0.1.0#dde49a8e779ca7c5ed8f0f73fcc0b1670cf931fc" }
+source = { git = "https://github.com/Exinker/spectrumlab-tiny?rev=master#7ba101847a65b713bd9317a093ef33d8e33f182a" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
@@ -2005,7 +2005,7 @@ name = "tqdm"
 version = "4.67.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2", size = 169737 }
 wheels = [

@@ -1,8 +1,7 @@
 import logging
 import logging.config
-import os
 
-from plugin.config import LOGGING_LEVEL
+from plugin.config import LOGGING_LEVEL, PLUGIN_PATH
 
 
 def setdefault_logger():
@@ -26,7 +25,7 @@ def setdefault_logger():
             file_handler={
                 'class': 'logging.FileHandler',
                 'level': LOGGING_LEVEL,
-                'filename': os.path.join('.', '.log'),
+                'filename': PLUGIN_PATH / '.log',
                 'mode': 'a',
                 'formatter': 'formatter',
                 'encoding': 'utf-8',

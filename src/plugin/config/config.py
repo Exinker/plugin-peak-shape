@@ -9,8 +9,8 @@ from plugin.config.parsers import (
     parse_quiet,
 )
 
-
-dotenv.load_dotenv(Path(__file__).parents[3] / '.env', verbose=True)
+PLUGIN_PATH = Path(__file__).parents[3].resolve()
+dotenv.load_dotenv(PLUGIN_PATH / '.env', verbose=True)
 
 
 LOGGING_LEVEL = os.getenv('LOGGING_LEVEL') or 'INFO'

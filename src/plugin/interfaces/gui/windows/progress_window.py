@@ -3,8 +3,7 @@ from typing import Sequence
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from plugin.interfaces.gui.windows.utils import pave
-
+from plugin.config import PLUGIN_PATH
 
 class ProgressWindow(QtWidgets.QWidget):
 
@@ -19,13 +18,13 @@ class ProgressWindow(QtWidgets.QWidget):
             self.setWindowFlag(flag, True)
 
         # style
-        filepath = pave(os.path.join('.', 'static', 'progress-window.css'))
+        filepath = PLUGIN_PATH / 'static' / 'progress-window.css'
         style = open(filepath, 'r').read()
         self.setStyleSheet(style)
 
         # icon
-        filepath = pave(os.path.join('.', 'static', 'icon.ico'))
-        icon = QtGui.QIcon(filepath)
+        filepath = PLUGIN_PATH / 'static' / 'icon.ico'
+        icon = QtGui.QIcon(str(filepath))
         self.setWindowIcon(icon)
 
         # layout

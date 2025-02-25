@@ -1,12 +1,12 @@
 import logging
-import os
 import sys
+from pathlib import Path
 
-root, _ = os.path.split(__file__)
+root = Path(__file__).parent
 sys.path.extend([
-    os.path.join(root, r'.venv'),
-    os.path.join(root, r'.venv\Lib\site-packages'),
-    os.path.join(root, r'src'),
+    root / '.venv',
+    root / '.venv\Lib\site-packages',
+    root / 'src',
 ])
 
 from plugin.config import DEFAULT_SHAPE, LOGGING_LEVEL, MAX_WORKERS, QUIET
