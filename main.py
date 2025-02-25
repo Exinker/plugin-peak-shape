@@ -2,11 +2,11 @@ import logging
 import sys
 from pathlib import Path
 
-root = Path(__file__).parent
+root = Path(__file__).parent.resolve()
 sys.path.extend([
-    root / '.venv',
-    root / '.venv\Lib\site-packages',
-    root / 'src',
+    str(root / '.venv'),
+    str(root / '.venv\Lib\site-packages'),
+    str(root / 'src'),
 ])
 
 from plugin.config import DEFAULT_SHAPE, LOGGING_LEVEL, MAX_WORKERS, QUIET
