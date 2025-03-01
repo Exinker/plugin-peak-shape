@@ -23,3 +23,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 * pass an exception to Atom
 * check Qt appliaction instance
+
+
+## [0.1.3] - 2025-03-01
+
+### Added
+* run plugin with env

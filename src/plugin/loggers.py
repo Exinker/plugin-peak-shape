@@ -42,6 +42,3 @@ def setdefault_logger():
     )
 
     logging.config.dictConfig(config)
-
-
-setdefault_logger()

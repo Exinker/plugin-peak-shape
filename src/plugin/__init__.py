@@ -5,6 +5,10 @@ from datetime import datetime
 import pkg_resources
 
 from .plugin import plugin_factory
+from .loggers import setdefault_logger
+
+
+setdefault_logger()
 
 
 distribution = pkg_resources.get_distribution('peak_shape_plugin')
