@@ -4,7 +4,6 @@ from typing import Callable
 
 from PySide6 import QtWidgets
 
-
 from plugin.interfaces.gui.windows import ProgressWindow
 
 
@@ -19,7 +18,7 @@ def observe(quiet: bool):
             if quiet:
                 return func(*args, **kwargs, callback=None)
 
-            app = QtWidgets.QApplication()
+            app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
             window = ProgressWindow()
             window.show()

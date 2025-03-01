@@ -1,9 +1,9 @@
-import os
 from typing import Sequence
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from plugin.config import PLUGIN_PATH
+
 
 class ProgressWindow(QtWidgets.QWidget):
 
@@ -51,13 +51,11 @@ class ProgressWindow(QtWidgets.QWidget):
             widget = self.findChild(QtWidgets.QLabel, 'messageLabel')
             widget.setText(message)
 
-        #
         app = QtWidgets.QApplication.instance()
         app.processEvents()
 
     def closeEvent(self, event):  # noqa: N802
 
-        # set empty widget
         self.setParent(None)
         event.accept()
 
