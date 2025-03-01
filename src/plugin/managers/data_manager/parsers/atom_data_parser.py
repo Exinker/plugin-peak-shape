@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ElementTree
 
 from plugin.dto import AtomData, AtomFilepath
 from plugin.managers.data_manager.exceptions import (
+    InvalidDetectorTypeError,
     LoadDataXMLError,
     ParseDataXMLError,
     ParseMetaXMLError,
@@ -60,8 +61,11 @@ def parse_xml(__filepath: AtomFilepath, xml: XML) -> 'AtomData':
 
     try:
         spectra = AtomSpectraParser.from_xml(xml=xml)
-    except Exception as error:
+    except ParseSpectraXMLError as error:
         LOGGER.error('Parse `spectra` is failed: %r', error)
+        raise ParseSpectraXMLError from error
+    except Exception as error:
+        LOGGER.error('Parse `spectra` is failed with unexpected error: %r', error)
         raise ParseSpectraXMLError from error
 
     return AtomData(

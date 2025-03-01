@@ -3,6 +3,7 @@ from base64 import b64decode
 
 import numpy as np
 
+from plugin.managers.data_manager.exceptions import InvalidDetectorTypeError
 from plugin.types import XML
 from spectrumlab.emulations.detectors import Detector
 from spectrumlab.emulations.noise import Noise
@@ -103,4 +104,6 @@ def get_detector(__n_numbers: int) -> Detector:
             return Detector.BLPP4000
 
     LOGGER.error("Detector with %s cells is not supported yet!", __n_numbers)
-    raise NotImplementedError
+
+    message = 'Форма контура может быть рассчитана только по спектрам полученным с использованием линейных детекторов БЛПП-2000 и БЛПП-4000!'
+    raise InvalidDetectorTypeError(message)

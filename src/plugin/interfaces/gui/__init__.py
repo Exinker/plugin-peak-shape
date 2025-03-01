@@ -1,5 +1,5 @@
-from .app import observe
+from .app import progress_wrapper
 
 __all__ = [
-    observe,
+    progress_wrapper,
 ]

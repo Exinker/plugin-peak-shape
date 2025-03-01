@@ -2,7 +2,6 @@ import logging
 import time
 
 from plugin.dto import AtomData
-from plugin.interfaces.callbacks import AbstractCallback
 from plugin.managers.data_manager.exceptions import (
     DataManagerError,
     LoadDataXMLError,
@@ -24,21 +23,10 @@ class DataManager:
     def __init__(
         self,
         xml: XML,
-        callback: AbstractCallback,
     ) -> None:
         self.xml = xml
-        self.callback = callback
 
     def parse(self) -> AtomData:
-        n, total = 0, 2
-        self.callback(
-            progress=100 * n / total,
-            info='<strong>PLEASE, WAIT!</strong>',
-            message='DATA PARSING: {n}/{total} is complited!'.format(
-                n=n,
-                total=total,
-            ),
-        )
 
         started_at = time.perf_counter()
         try:
@@ -56,15 +44,6 @@ class DataManager:
                     ),
                 )
 
-        n, total = 1, 2
-        self.callback(
-            progress=100 * n / total,
-            info='<strong>PLEASE, WAIT!</strong>',
-            message='DATA PARSING: {n}/{total} is complited!'.format(
-                n=n,
-                total=total,
-            ),
-        )
         started_at = time.perf_counter()
         try:
             data = AtomDataParser.parse(filepath)
@@ -78,13 +57,3 @@ class DataManager:
                         elapsed=time.perf_counter() - started_at,
                     ),
                 )
-
-            n, total = 2, 2
-            self.callback(
-                progress=100 * n / total,
-                info='<strong>PLEASE, WAIT!</strong>',
-                message='DATA PARSING: {n}/{total} is complited!'.format(
-                    n=n,
-                    total=total,
-                ),
-            )

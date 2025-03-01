@@ -10,7 +10,7 @@ from plugin.interfaces.gui.windows import ProgressWindow
 LOGGER = logging.getLogger('app')
 
 
-def observe(quiet: bool):
+def progress_wrapper(quiet: bool):
     def inner(func: Callable):
 
         @wraps(func)
@@ -24,7 +24,13 @@ def observe(quiet: bool):
             window.show()
 
             try:
-                return func(*args, **kwargs, callback=window.update)
+                result = func(*args, **kwargs, callback=window.update)
+            except Exception:
+                window.close()
+                raise
+            else:
+                window.close()
+                return result
             finally:
                 app.quit()
 
