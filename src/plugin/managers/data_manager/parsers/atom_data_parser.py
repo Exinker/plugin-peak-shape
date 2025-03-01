@@ -3,7 +3,6 @@ import xml.etree.ElementTree as ElementTree
 
 from plugin.dto import AtomData, AtomFilepath
 from plugin.managers.data_manager.exceptions import (
-    InvalidDetectorTypeError,
     LoadDataXMLError,
     ParseDataXMLError,
     ParseMetaXMLError,
@@ -13,8 +12,7 @@ from plugin.managers.data_manager.parsers.atom_meta_parser import AtomMetaParser
 from plugin.managers.data_manager.parsers.atom_spectra_parser import AtomSpectraParser
 from plugin.types import XML
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 class AtomDataParser:

@@ -14,23 +14,16 @@ from plugin.managers.data_manager.parsers import (
 )
 from plugin.types import XML
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 class DataManager:
 
-    def __init__(
-        self,
-        xml: XML,
-    ) -> None:
-        self.xml = xml
-
-    def parse(self) -> AtomData:
+    def parse(self, xml: XML) -> AtomData:
 
         started_at = time.perf_counter()
         try:
-            filepath = FilepathParser.parse(self.xml)
+            filepath = FilepathParser.parse(xml)
         except ParseFilepathXMLError as error:
             LOGGER.error('%r', error)
             raise

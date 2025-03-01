@@ -3,8 +3,7 @@ import logging
 from plugin.dto import AtomMeta
 from plugin.types import XML
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 class AtomMetaParser:

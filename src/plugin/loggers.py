@@ -32,13 +32,13 @@ def setdefault_logger():
             },
         ),
 
-        loggers=dict(
-            app={
+        loggers={
+            'plugin-peak-shape': {
                 'level': LOGGING_LEVEL,
                 'handlers': ['file_handler', 'stream_handler'],
                 'propagate': False,
             },
-        ),
+        },
     )
 
     logging.config.dictConfig(config)

@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
 
-class AbstractCallback(ABC):
+class AbstractProgressCallback(ABC):
 
     @abstractmethod
     def __call__(self, *args, **kwargs) -> None:
         raise NotImplementedError
 
 
-class NullCallback(AbstractCallback):
+class NullProgressCallback(AbstractProgressCallback):
 
     def __call__(self, *args, **kwargs) -> None:
         pass

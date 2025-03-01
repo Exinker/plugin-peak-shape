@@ -4,8 +4,7 @@ import os
 
 from spectrumlab.peaks.shape import Shape
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 DEFAULT_MAX_WORKERS = 1 or multiprocessing.cpu_count()  # FIXME: change to `multiprocessing.cpu_count()`
 DEFAULT_SHAPE = Shape(width=2, asymmetry=0, ratio=.1)

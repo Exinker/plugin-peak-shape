@@ -2,14 +2,12 @@ import logging
 from collections.abc import Sequence
 from multiprocessing import Pool
 
+from plugin.interfaces.callbacks import AbstractProgressCallback
 from spectrumlab.emulations.noise import Noise
 from spectrumlab.peaks.shape import Shape, restore_shape_from_spectrum
 from spectrumlab.spectra import Spectrum
 
-from plugin.interfaces.callbacks import AbstractCallback
-
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 def restore_shape(__args: tuple[int, Spectrum, Shape]) -> Shape:
@@ -52,7 +50,7 @@ def restore_shapes(
     spectra: Sequence[Spectrum],
     default_shape: Shape,
     n_workers: int,
-    callback: AbstractCallback,
+    callback: AbstractProgressCallback,
 ) -> tuple[Shape]:
     n_shapes = len(spectra)
 

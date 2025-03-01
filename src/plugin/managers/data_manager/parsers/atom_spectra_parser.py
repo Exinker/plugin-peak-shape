@@ -10,8 +10,7 @@ from spectrumlab.emulations.noise import Noise
 from spectrumlab.spectra import Spectrum
 from spectrumlab.types import Array
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 class AtomSpectraParser:

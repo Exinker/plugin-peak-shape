@@ -8,8 +8,7 @@ from plugin.managers.data_manager.exceptions import (
 )
 from plugin.types import XML
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 class FilepathParser:

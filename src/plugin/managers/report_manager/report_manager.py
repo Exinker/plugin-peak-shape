@@ -1,8 +1,8 @@
 from collections.abc import Mapping, Sequence
 from typing import Any, NewType
 
+from plugin.config import PLUGIN_PATH
 from spectrumlab.peaks.shape import Shape
-
 
 T = NewType('T', Mapping[str, Any])
 
@@ -14,14 +14,14 @@ class ReportManager:
     def __init__(
         self,
         default_shape: Shape,
-    ):
+    ) -> None:
         self.default_shape = default_shape
 
     def build(
         self,
         shapes: Sequence[Shape],
         dump: bool = False,
-    ) -> 'ReportManager':
+    ) -> str:
 
         results = []
         for i, shape in enumerate(shapes):
@@ -65,7 +65,7 @@ class ReportManager:
     ) -> None:
         filename = filename or 'results'
 
-        filepath = f'./{filename}.xml'
+        filepath = PLUGIN_PATH / f'{filename}.xml'
         with open(filepath, 'w') as file:
             file.write(report)
 

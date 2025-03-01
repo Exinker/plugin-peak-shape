@@ -2,6 +2,7 @@ from typing import Sequence
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
+import plugin
 from plugin.config import PLUGIN_PATH
 
 
@@ -11,6 +12,9 @@ class ProgressWindow(QtWidgets.QWidget):
         super().__init__(*args, **kwargs)
 
         self.setObjectName('progressWindow')
+
+        # title
+        self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
 
         # flags
         flags = flags or (QtCore.Qt.WindowType.Window, QtCore.Qt.WindowType.WindowStaysOnTopHint)
