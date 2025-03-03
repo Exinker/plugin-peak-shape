@@ -1,15 +1,7 @@
 from .config import (
-    DEFAULT_SHAPE,
-    LOGGING_LEVEL,
-    MAX_WORKERS,
-    PLUGIN_PATH,
-    QUIET,
+    CONFIG,
 )
 
 __all__ = [
-    DEFAULT_SHAPE,
-    LOGGING_LEVEL,
-    MAX_WORKERS,
-    PLUGIN_PATH,
-    QUIET,
+    CONFIG,
 ]

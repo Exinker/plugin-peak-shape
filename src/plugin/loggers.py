@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from plugin.config import LOGGING_LEVEL, PLUGIN_PATH
+from plugin.config import CONFIG
 
 
 def setdefault_logger():
@@ -24,8 +24,8 @@ def setdefault_logger():
             },
             file_handler={
                 'class': 'logging.FileHandler',
-                'level': LOGGING_LEVEL,
-                'filename': PLUGIN_PATH / '.log',
+                'level': CONFIG.logging_level.value,
+                'filename': CONFIG.plugin_path / '.log',
                 'mode': 'a',
                 'formatter': 'formatter',
                 'encoding': 'utf-8',
@@ -34,7 +34,7 @@ def setdefault_logger():
 
         loggers={
             'plugin-peak-shape': {
-                'level': LOGGING_LEVEL,
+                'level': CONFIG.logging_level.value,
                 'handlers': ['file_handler', 'stream_handler'],
                 'propagate': False,
             },

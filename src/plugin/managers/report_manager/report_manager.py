@@ -1,7 +1,7 @@
 from collections.abc import Mapping, Sequence
 from typing import Any, NewType
 
-from plugin.config import PLUGIN_PATH
+from plugin.config import CONFIG
 from spectrumlab.peaks.shape import Shape
 
 T = NewType('T', Mapping[str, Any])
@@ -65,7 +65,7 @@ class ReportManager:
     ) -> None:
         filename = filename or 'results'
 
-        filepath = PLUGIN_PATH / f'{filename}.xml'
+        filepath = CONFIG.plugin_path / f'{filename}.xml'
         with open(filepath, 'w') as file:
             file.write(report)
 

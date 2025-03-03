@@ -1,4 +1,4 @@
-from plugin.config import DEFAULT_SHAPE, MAX_WORKERS, QUIET
+from plugin.config import CONFIG
 from plugin.exceptions import exception_wrapper
 from plugin.interfaces.callbacks import AbstractProgressCallback, NullProgressCallback
 from plugin.interfaces.gui import progress_wrapper
@@ -12,11 +12,11 @@ def plugin_factory() -> 'Plugin':
 
     data_manager = DataManager()
     shape_manager = ShapeManager(
-        default_shape=DEFAULT_SHAPE,
-        max_workers=MAX_WORKERS,
+        default_shape=CONFIG.default_shape,
+        max_workers=CONFIG.max_workers,
     )
     report_manager = ReportManager(
-        default_shape=DEFAULT_SHAPE,
+        default_shape=CONFIG.default_shape,
     )
 
     return Plugin(
@@ -42,7 +42,7 @@ class Plugin:
         self.report_manager = report_manager
 
     @exception_wrapper
-    @progress_wrapper(quiet=QUIET)
+    @progress_wrapper
     def run(
         self,
         xml: XML,

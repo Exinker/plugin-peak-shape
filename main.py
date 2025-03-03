@@ -10,7 +10,7 @@ sys.path.extend([
 ])
 
 import plugin
-from plugin.config import DEFAULT_SHAPE, LOGGING_LEVEL, MAX_WORKERS, QUIET
+from plugin.config import CONFIG
 from plugin.loggers import *
 from plugin.types import XML
 
@@ -21,10 +21,9 @@ PLUGIN = plugin.plugin_factory()
 def process_xml(config_xml: XML) -> str:
 
     LOGGER.info('run %r', plugin.__name__)
-    LOGGER.info('DEFAULT_SHAPE: %s', DEFAULT_SHAPE)
-    LOGGER.info('LOGGING_LEVEL: %s', LOGGING_LEVEL)
-    LOGGER.info('MAX_WORKERS: %s', MAX_WORKERS)
-    LOGGER.info('QUIET: %s', QUIET)
+    LOGGER.info('DEFAULT_SHAPE: %s', CONFIG.default_shape)
+    LOGGER.info('LOGGING_LEVEL: %s', CONFIG.logging_level.value)
+    LOGGER.info('MAX_WORKERS: %s', CONFIG.max_workers)
 
     return PLUGIN.run(config_xml)
 
