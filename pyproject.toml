@@ -24,6 +24,7 @@ dependencies = [
     "pydantic>=2.10.6",
     "pydantic-settings>=2.8.1",
     "pyside6>=6.8.2.1",
+    "setuptools>=75.8.0",
     "spectrumlab-tiny",
 ]
 requires-python = ">=3.12"
