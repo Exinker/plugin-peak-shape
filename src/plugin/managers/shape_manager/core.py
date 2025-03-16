@@ -1,7 +1,9 @@
 import logging
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
-from plugin.interfaces.callbacks import AbstractProgressCallback
+from matplotlib.figure import Figure
+
+from plugin.api.callbacks import AbstractProgressCallback
 from spectrumlab.emulations.noise import Noise
 from spectrumlab.peaks.shape import Shape, restore_shape_from_spectrum
 from spectrumlab.spectra import Spectrum
@@ -9,8 +11,10 @@ from spectrumlab.spectra import Spectrum
 LOGGER = logging.getLogger('plugin-peak-shape')
 
 
-def restore_shape(__args: tuple[int, Spectrum, Shape]) -> Shape:
-    n, spectrum, default_shape = __args
+def restore_shape(
+    __args: tuple[int, Spectrum, Shape, Mapping[str, Figure]],
+) -> Shape:
+    n, spectrum, default_shape, figures = __args
 
     LOGGER.debug(
         'detector %02d - restore peak\'s shape',
@@ -23,6 +27,8 @@ def restore_shape(__args: tuple[int, Spectrum, Shape]) -> Shape:
                 detector=spectrum.detector,
                 n_frames=1,  # TODO: read from xml!
             ),
+            show=True,
+            figures=figures,
         )
     except ValueError as error:
         LOGGER.warning(
@@ -49,34 +55,16 @@ def restore_shapes(
     spectra: Sequence[Spectrum],
     default_shape: Shape,
     n_workers: int,
-    callback: AbstractProgressCallback,
+    progress_callback: AbstractProgressCallback,
+    figures: Sequence[Mapping[str, Figure]],
 ) -> tuple[Shape]:
     assert n_workers == 1, 'Multiprocessing is not supported yet!'
 
-    n_shapes = len(spectra)
-    n, total = 1, n_shapes
-    callback(
-        progress=100 * n / total,
-        info='<strong>PLEASE, WAIT!</strong>',
-        message='SHAPE ESTIMATION: {n}/{total} are complited!'.format(
-            n=n,
-            total=total,
-        ),
-    )
-
     shapes = []
     for n, spectrum in enumerate(spectra):
-        shape = restore_shape((n, spectrum, default_shape))
-        shapes.append(shape)
+        shape = restore_shape((n, spectrum, default_shape, figures[n]))
 
-        n, total = len(shapes), n_shapes
-        callback(
-            progress=100 * n / total,
-            info='<strong>PLEASE, WAIT!</strong>',
-            message='SHAPE ESTIMATION: {n}/{total} are complited!'.format(
-                n=n,
-                total=total,
-            ),
-        )
+        progress_callback(n=n)
+        shapes.append(shape)
 
     return tuple(shapes)

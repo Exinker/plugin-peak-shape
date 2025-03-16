@@ -1,8 +1,11 @@
 import logging
 import time
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
-from plugin.interfaces.callbacks import AbstractProgressCallback
+from matplotlib.figure import Figure
+
+from plugin.api.callbacks import AbstractProgressCallback, NullProgressCallback
+from plugin.api.view import progress_wrapper
 from plugin.managers.shape_manager.core import restore_shapes
 from spectrumlab.peaks.shape import Shape
 from spectrumlab.spectra import Spectrum
@@ -17,14 +20,18 @@ class ShapeManager:
         default_shape: Shape,
         max_workers: int,
     ) -> None:
+
         self.default_shape = default_shape
         self.max_workers = max_workers
 
+    @progress_wrapper
     def restore(
         self,
         spectra: Sequence[Spectrum],
-        progress_callback: AbstractProgressCallback,
+        progress_callback: AbstractProgressCallback | None = None,
+        figures: Sequence[Mapping[str, Figure]] | None = None,
     ):
+        progress_callback = progress_callback or NullProgressCallback()
         started_at = time.perf_counter()
 
         LOGGER.debug(
@@ -36,7 +43,8 @@ class ShapeManager:
                 spectra=spectra,
                 default_shape=self.default_shape,
                 n_workers=self.max_workers,
-                callback=progress_callback,
+                progress_callback=progress_callback,
+                figures=figures,
             )
             return shapes
         finally:

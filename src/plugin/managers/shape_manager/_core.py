@@ -2,7 +2,7 @@ import logging
 from collections.abc import Sequence
 from multiprocessing import Pool
 
-from plugin.interfaces.callbacks import AbstractProgressCallback
+from plugin.api.callbacks import AbstractProgressCallback
 from spectrumlab.emulations.noise import Noise
 from spectrumlab.peaks.shape import Shape, restore_shape_from_spectrum
 from spectrumlab.spectra import Spectrum
@@ -50,12 +50,12 @@ def restore_shapes(
     spectra: Sequence[Spectrum],
     default_shape: Shape,
     n_workers: int,
-    callback: AbstractProgressCallback,
+    progress_callback: AbstractProgressCallback,
 ) -> tuple[Shape]:
     n_shapes = len(spectra)
 
     n, total = 1, n_shapes
-    callback(
+    progress_callback(
         progress=100*n/total,
         info='<strong>PLEASE, WAIT!</strong>',
         message='SHAPE ESTIMATION: {n}/{total} are complited!'.format(
@@ -76,7 +76,7 @@ def restore_shapes(
             shapes.append(shape)
 
             n, total = len(shapes), n_shapes
-            callback(
+            progress_callback(
                 progress=100*n/total,
                 info='<strong>PLEASE, WAIT!</strong>',
                 message='SHAPE ESTIMATION: {n}/{total} are complited!'.format(

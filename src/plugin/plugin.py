@@ -1,7 +1,5 @@
 from plugin.config import CONFIG
 from plugin.exceptions import exception_wrapper
-from plugin.interfaces.callbacks import AbstractProgressCallback, NullProgressCallback
-from plugin.interfaces.gui import progress_wrapper
 from plugin.managers.data_manager import DataManager
 from plugin.managers.report_manager import ReportManager
 from plugin.managers.shape_manager import ShapeManager
@@ -42,25 +40,20 @@ class Plugin:
         self.report_manager = report_manager
 
     @exception_wrapper
-    @progress_wrapper
     def run(
         self,
         xml: XML,
-        progress_callback: AbstractProgressCallback | None,
     ) -> str:
-        progress_callback = progress_callback or NullProgressCallback()
 
         data = self.data_manager.parse(
             xml=xml,
         )
-
         shapes = self.shape_manager.restore(
             spectra=data.spectra,
-            progress_callback=progress_callback,
         )
-
         report = self.report_manager.build(
             shapes=shapes,
             dump=True,
         )
+
         return report
