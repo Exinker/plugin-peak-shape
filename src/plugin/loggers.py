@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from plugin.config import CONFIG
+from plugin.config import PLUGIN_CONFIG
 
 
 def setdefault_logger():
@@ -24,8 +24,8 @@ def setdefault_logger():
             },
             file_handler={
                 'class': 'logging.FileHandler',
-                'level': CONFIG.logging_level.value,
-                'filename': CONFIG.plugin_path / '.log',
+                'level': PLUGIN_CONFIG.logging_level.value,
+                'filename': PLUGIN_CONFIG.plugin_path / '.log',
                 'mode': 'a',
                 'formatter': 'formatter',
                 'encoding': 'utf-8',
@@ -34,7 +34,12 @@ def setdefault_logger():
 
         loggers={
             'plugin-peak-shape': {
-                'level': CONFIG.logging_level.value,
+                'level': PLUGIN_CONFIG.logging_level.value,
+                'handlers': ['file_handler', 'stream_handler'],
+                'propagate': False,
+            },
+            'spectrumlab': {
+                'level': PLUGIN_CONFIG.logging_level.value,
                 'handlers': ['file_handler', 'stream_handler'],
                 'propagate': False,
             },

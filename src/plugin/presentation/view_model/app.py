@@ -1,11 +1,12 @@
 import logging
-from collections.abc import Sequence
+from collections.abc import Mapping
 from functools import wraps
 from typing import Callable
 
 from PySide6 import QtWidgets
 
-from plugin.api.view.windows import ViewWindow
+from plugin.presentation.view_model.windows import ObservabilityWindow
+from spectrumlab.peaks.shape import FIGURES
 from spectrumlab.spectra import Spectrum
 
 LOGGER = logging.getLogger('plugin-peak-shape')
@@ -14,14 +15,16 @@ LOGGER = logging.getLogger('plugin-peak-shape')
 def progress_wrapper(func: Callable):
 
     @wraps(func)
-    def wrapper(*args, spectra: Sequence[Spectrum], **kwargs):
+    def wrapper(*args, spectra: Mapping[int, Spectrum], **kwargs):
 
         app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
-        window = ViewWindow(
+        window = ObservabilityWindow(
             n_tabs=len(spectra),
         )
         window.show()
+
+        FIGURES.set(window.figures)
 
         try:
             result = func(
@@ -29,7 +32,6 @@ def progress_wrapper(func: Callable):
                 spectra=spectra,
                 **kwargs,
                 progress_callback=window.update,
-                figures=window.figures,
             )
         except Exception:
             raise

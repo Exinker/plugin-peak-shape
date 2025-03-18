@@ -10,7 +10,11 @@ sys.path.extend([
 ])
 
 import plugin
-from plugin.config import CONFIG
+from plugin.config import (
+    DRAFT_PEAK_CONFIG,
+    PLUGIN_CONFIG,
+    RESTORE_SHAPE_CONFIG,
+)
 from plugin.loggers import *
 from plugin.types import XML
 
@@ -21,15 +25,15 @@ PLUGIN = plugin.plugin_factory()
 def process_xml(config_xml: XML) -> str:
 
     LOGGER.info('run %r', plugin.__name__)
-    LOGGER.info('DEFAULT_SHAPE: %s', CONFIG.default_shape)
-    LOGGER.info('LOGGING_LEVEL: %s', CONFIG.logging_level.value)
-    LOGGER.info('MAX_WORKERS: %s', CONFIG.max_workers)
+    LOGGER.info('DRAFT_PEAK_CONFIG: %s', DRAFT_PEAK_CONFIG)
+    LOGGER.info('PLUGIN_CONFIG: %s', PLUGIN_CONFIG)
+    LOGGER.info('RESTORE_SHAPE_CONFIG: %s', RESTORE_SHAPE_CONFIG)
 
     return PLUGIN.run(config_xml)
 
 
 if __name__ == '__main__':
     result = process_xml(
-        config_xml=r'<input>C:\Atom x64 3.3 (2025.02.20)\Temp\py_spe.xml</input>',
+        config_xml=r'<input>C:\Atom x64 3.3 (2025.03.18)\Temp\py_spe.xml</input>',
     )
     print(result)

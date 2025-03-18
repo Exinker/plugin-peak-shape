@@ -3,14 +3,14 @@ from dataclasses import dataclass
 from typing import Any, NewType
 
 from PySide6 import QtCore, QtGui, QtWidgets
-from matplotlib.figure import Figure
 from matplotlib.backend_bases import KeyEvent, MouseEvent, PickEvent
+from matplotlib.figure import Figure
 
 import plugin
-from plugin.config import CONFIG
-from spectrumapp.helpers import find_tab, getdefault_object_name
-from spectrumapp.widgets.graph_widget import MplCanvas
+from plugin.config import PLUGIN_CONFIG
+from spectrumapp.helpers import getdefault_object_name, find_tab
 from spectrumapp.types import Lims
+from spectrumapp.widgets.graph_widget import MplCanvas
 
 
 DEFAULT_SIZE = QtCore.QSize(640, 480)
@@ -143,7 +143,10 @@ class BaseGraphWidget(QtWidgets.QWidget):
     def sizeHint(self) -> QtCore.QSize:  # noqa: N802
         return self._widget_size
 
-    def keyPressEvent(self, event: KeyEvent) -> None:  # noqa: N802
+    def keyPressEvent(  # noqa: N802
+        self,
+        event: KeyEvent,
+    ) -> None:
 
         match event.key():
             case QtCore.Qt.Key.Key_Control:
@@ -153,7 +156,10 @@ class BaseGraphWidget(QtWidgets.QWidget):
             case _:
                 return None
 
-    def keyReleaseEvent(self, event: KeyEvent) -> None:  # noqa: N802
+    def keyReleaseEvent(  # noqa: N802
+        self,
+        event: KeyEvent,
+    ) -> None:
 
         match event.key():
             case QtCore.Qt.Key.Key_Control:
@@ -163,10 +169,16 @@ class BaseGraphWidget(QtWidgets.QWidget):
             case _:
                 return None
 
-    def _pick_event(self, event: PickEvent) -> None:  # pragma: no cover
+    def _pick_event(
+        self,
+        event: PickEvent,
+    ) -> None:  # pragma: no cover
         return None
 
-    def _button_press_event(self, event: MouseEvent) -> None:  # pragma: no cover
+    def _button_press_event(
+        self,
+        event: MouseEvent,
+    ) -> None:  # pragma: no cover
         self._mouse_event = event
 
         # update zoom and pan
@@ -184,7 +196,10 @@ class BaseGraphWidget(QtWidgets.QWidget):
             self.set_cropped_lims(lims=None)
             self.update_zoom(lims=self.full_lims)
 
-    def _button_release_event(self, event: MouseEvent) -> None:  # pragma: no cover
+    def _button_release_event(
+        self,
+        event: MouseEvent,
+    ) -> None:  # pragma: no cover
 
         # update annotate
         # self._point_annotation.set_visible(False)
@@ -211,7 +226,10 @@ class BaseGraphWidget(QtWidgets.QWidget):
                 event,
             )
 
-    def _motion_notify_event(self, event: MouseEvent) -> None:  # pragma: no cover
+    def _motion_notify_event(
+        self,
+        event: MouseEvent,
+    ) -> None:  # pragma: no cover
 
         # update zoom and pan
         if self.ctrl_modified and self.shift_modified:
@@ -228,14 +246,27 @@ class BaseGraphWidget(QtWidgets.QWidget):
                 )
                 return None
 
-    def _zoom_event(self, press_event: MouseEvent, release_event: MouseEvent) -> None:  # pragma: no cover
+    def _zoom_event(
+        self,
+        press_event: MouseEvent | None,
+        release_event: MouseEvent | None,
+    ) -> None:  # pragma: no cover
+
+        if (press_event is None) or (release_event is None):
+            return None
+        if any(
+            getattr(obj, attr) is None
+            for obj in [press_event, release_event]
+            for attr in ['xdata', 'ydata']
+        ):
+            return None
 
         # update full lims
         self.set_full_lims(
             lims=(
                 self.canvas.axes.get_xlim(),
                 self.canvas.axes.get_ylim(),
-            )
+            ),
         )
 
         # update crop lims
@@ -254,7 +285,20 @@ class BaseGraphWidget(QtWidgets.QWidget):
             lims=self.cropped_lims,
         )
 
-    def _pan_event(self, press_event: MouseEvent, release_event: MouseEvent) -> None:  # pragma: no cover
+    def _pan_event(
+        self,
+        press_event: MouseEvent | None,
+        release_event: MouseEvent | None,
+    ) -> None:  # pragma: no cover
+
+        if (press_event is None) or (release_event is None):
+            return None
+        if any(
+            getattr(obj, attr) is None
+            for obj in [press_event, release_event]
+            for attr in ['xdata', 'ydata']
+        ):
+            return None
 
         # update crop lims
         xlim, ylim = self.canvas.axes.get_xlim(), self.canvas.axes.get_ylim()
@@ -316,8 +360,8 @@ class ViewWidget(QtWidgets.QWidget):
 
     def update(self) -> None:
 
-        tabWidget = self.parent().parent()  # FIXME
-        tabWidget.setCurrentWidget(self)
+        tab_widget = self.parent().parent()  # FIXME
+        tab_widget.setCurrentWidget(self)
 
         self.spectrumViewWidget.update()
         self.shapeViewWidget.update()
@@ -356,13 +400,13 @@ class TabViewWidget(QtWidgets.QTabWidget):
         widget.update()
 
 
-class ViewWindow(QtWidgets.QWidget):
+class ObservabilityWindow(QtWidgets.QWidget):
 
     def __init__(
         self,
         *args,
         n_tabs: int,
-        flags: Sequence[QtCore.Qt.WindowType] | None = None,
+        flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
@@ -373,9 +417,15 @@ class ViewWindow(QtWidgets.QWidget):
         self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
 
         # flags
-        flags = flags or (QtCore.Qt.WindowType.Window, QtCore.Qt.WindowType.WindowStaysOnTopHint)
-        for flag in flags:
-            self.setWindowFlag(flag, True)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.CustomizeWindowHint)
+
+        flags = flags or {
+            # QtCore.Qt.WindowType.WindowStaysOnTopHint: False,
+            # QtCore.Qt.WindowType.WindowCloseButtonHint: False,
+            QtCore.Qt.WindowType.Window: True,
+        }
+        for key, value in flags.items():
+            self.setWindowFlag(key, value)
 
         # style
         # filepath = CONFIG.plugin_path / 'static' / 'view-window.css'
@@ -383,7 +433,7 @@ class ViewWindow(QtWidgets.QWidget):
         # self.setStyleSheet(style)
 
         # icon
-        filepath = CONFIG.plugin_path / 'static' / 'icon.ico'
+        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'icon.ico'
         icon = QtGui.QIcon(str(filepath))
         self.setWindowIcon(icon)
 
@@ -392,10 +442,10 @@ class ViewWindow(QtWidgets.QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self.tabWidget = TabViewWidget(
+        self.tab_widget = TabViewWidget(
             n_tabs=n_tabs,
         )
-        layout.addWidget(self.tabWidget)
+        layout.addWidget(self.tab_widget)
 
         # geometry
         self.setFixedSize(QtCore.QSize(1280, 720))
@@ -405,11 +455,11 @@ class ViewWindow(QtWidgets.QWidget):
 
     @property
     def figures(self) -> Sequence[Mapping[str, Figure]]:
-        return self.tabWidget.figures
+        return self.tab_widget.figures
 
-    def update(self, n: int) -> None:
+    def update(self, n: int, total: int) -> None:
 
-        self.tabWidget.update(
+        self.tab_widget.update(
             n=n,
         )
 

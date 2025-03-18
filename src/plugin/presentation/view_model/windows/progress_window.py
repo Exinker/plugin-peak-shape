@@ -1,14 +1,19 @@
-from typing import Sequence
+from collections.abc import Mapping
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
 import plugin
-from plugin.config import CONFIG
+from plugin.config import PLUGIN_CONFIG
 
 
 class ProgressWindow(QtWidgets.QWidget):
 
-    def __init__(self, *args, flags: Sequence[QtCore.Qt.WindowType] | None = None, **kwargs):
+    def __init__(
+        self,
+        *args,
+        flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
 
         self.setObjectName('progressWindow')
@@ -17,17 +22,20 @@ class ProgressWindow(QtWidgets.QWidget):
         self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
 
         # flags
-        flags = flags or (QtCore.Qt.WindowType.Window, QtCore.Qt.WindowType.WindowStaysOnTopHint)
-        for flag in flags:
-            self.setWindowFlag(flag, True)
+        flags = flags or {
+            QtCore.Qt.WindowType.Window: True,
+            QtCore.Qt.WindowType.WindowStaysOnTopHint: True,
+        }
+        for key, value in flags.items():
+            self.setWindowFlag(key, value)
 
         # style
-        filepath = CONFIG.plugin_path / 'static' / 'progress-window.css'
+        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'progress-window.css'
         style = open(filepath, 'r').read()
         self.setStyleSheet(style)
 
         # icon
-        filepath = CONFIG.plugin_path / 'static' / 'icon.ico'
+        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'icon.ico'
         icon = QtGui.QIcon(str(filepath))
         self.setWindowIcon(icon)
 
