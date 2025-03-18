@@ -1,7 +1,10 @@
 from collections.abc import Mapping, Sequence
 from typing import Any, NewType
 
-from plugin.config import CONFIG
+from plugin.config import (
+    PluginConfig,
+    RestoreShapeConfig,
+)
 from spectrumlab.peaks.shape import Shape
 
 T = NewType('T', Mapping[str, Any])
@@ -13,9 +16,12 @@ class ReportManager:
 
     def __init__(
         self,
-        default_shape: Shape,
+        plugin_config: PluginConfig,
+        restore_shape_config: RestoreShapeConfig,
     ) -> None:
-        self.default_shape = default_shape
+
+        self.plugin_config = plugin_config
+        self.restore_shape_config = restore_shape_config
 
     def build(
         self,
@@ -24,11 +30,11 @@ class ReportManager:
     ) -> str:
 
         results = []
-        for i, shape in enumerate(shapes):
-            is_default = shape == self.default_shape
+        for n, shape in shapes.items():
+            is_default = shape == self.restore_shape_config.default_shape
 
             result = dict(
-                index=i,
+                index=n,
                 result=not is_default,
                 width=shape.width,
                 asymmetry=shape.asymmetry,
@@ -58,14 +64,14 @@ class ReportManager:
             ])}),
         )
 
-    @staticmethod
     def dump(
+        self,
         report: str,
         filename: str | None = None,
     ) -> None:
         filename = filename or 'results'
 
-        filepath = CONFIG.plugin_path / f'{filename}.xml'
+        filepath = self.plugin_config.plugin_path / f'{filename}.xml'
         with open(filepath, 'w') as file:
             file.write(report)
 

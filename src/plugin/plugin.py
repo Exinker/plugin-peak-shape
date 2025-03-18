@@ -1,4 +1,8 @@
-from plugin.config import CONFIG
+from plugin.config import (
+    DRAFT_PEAK_CONFIG,
+    PLUGIN_CONFIG,
+    RESTORE_SHAPE_CONFIG,
+)
 from plugin.exceptions import exception_wrapper
 from plugin.managers.data_manager import DataManager
 from plugin.managers.report_manager import ReportManager
@@ -10,11 +14,13 @@ def plugin_factory() -> 'Plugin':
 
     data_manager = DataManager()
     shape_manager = ShapeManager(
-        default_shape=CONFIG.default_shape,
-        max_workers=CONFIG.max_workers,
+        plugin_config=PLUGIN_CONFIG,
+        draft_peak_config=DRAFT_PEAK_CONFIG,
+        restore_shape_config=RESTORE_SHAPE_CONFIG,
     )
     report_manager = ReportManager(
-        default_shape=CONFIG.default_shape,
+        plugin_config=PLUGIN_CONFIG,
+        restore_shape_config=RESTORE_SHAPE_CONFIG,
     )
 
     return Plugin(

@@ -1,5 +1,6 @@
 import logging
 from base64 import b64decode
+from collections.abc import Mapping
 
 import numpy as np
 
@@ -16,9 +17,9 @@ LOGGER = logging.getLogger('plugin-peak-shape')
 class AtomSpectraParser:
 
     @classmethod
-    def from_xml(cls, xml: XML) -> tuple[Spectrum]:
+    def from_xml(cls, xml: XML) -> Mapping[int, Spectrum]:
 
-        spectrum = []
+        spectra = []
         for probe in xml.find('probes').findall('probe'):
             is_not_empty = len(probe.findall('spe')) > 0
             if is_not_empty:
@@ -45,9 +46,12 @@ class AtomSpectraParser:
                         clipped=np.full(n_numbers, False),  # TODO: read from xml!
                         detector=detector,  # TODO: read from xml!
                     )
-                    spectrum.append(spe)
+                    spectra.append(spe)
 
-        return tuple(spectrum)
+        return {
+            i: spectrum
+            for i, spectrum in enumerate(spectra)
+        }
 
 
 def numpy_array_from_b64(buffer: str) -> Array[float]:

@@ -1,7 +1,7 @@
 from .progress_window import ProgressWindow
-from .view_window import ViewWindow
+from .observability_window import ObservabilityWindow
 
 __all__ = [
     ProgressWindow,
-    ViewWindow,
+    ObservabilityWindow,
 ]
