@@ -27,9 +27,14 @@ def restore_shape(
                 detector=spectrum.detector,
                 n_frames=1,  # TODO: read from xml!
             ),
-            show=True,
             figures=figures,
         )
+        shape = Shape(
+            width=shape.width,
+            asymmetry=shape.asymmetry,
+            ratio=(1 - shape.ratio),
+        )  # FIXME: remove Atom's lagacy (never change it!)
+
     except ValueError as error:
         LOGGER.warning(
             'detector %02d - shape is not restored: %r',
