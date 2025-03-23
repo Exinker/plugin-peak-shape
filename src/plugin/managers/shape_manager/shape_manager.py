@@ -1,32 +1,41 @@
 import logging
 import time
-from collections.abc import Sequence
+from collections.abc import Mapping
 
-from plugin.interfaces.callbacks import AbstractCallback
+from plugin.config import (
+    DraftPeakConfig,
+    PluginConfig,
+    RestoreShapeConfig,
+)
 from plugin.managers.shape_manager.core import restore_shapes
+from plugin.presentation.callbacks import AbstractProgressCallback, NullProgressCallback
+from plugin.presentation.view_model import progress_wrapper
 from spectrumlab.peaks.shape import Shape
 from spectrumlab.spectra import Spectrum
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 class ShapeManager:
 
     def __init__(
         self,
-        default_shape: Shape,
-        max_workers: int,
-        callback: AbstractCallback,
+        plugin_config: DraftPeakConfig,
+        draft_peak_config: PluginConfig,
+        restore_shape_config: RestoreShapeConfig,
     ) -> None:
-        self.default_shape = default_shape
-        self.max_workers = max_workers
-        self.pbar = callback
 
+        self.plugin_config = plugin_config
+        self.draft_peak_config = draft_peak_config
+        self.restore_shape_config = restore_shape_config
+
+    @progress_wrapper
     def restore(
         self,
-        spectra: Sequence[Spectrum],
-    ):
+        spectra: Mapping[int, Spectrum],
+        progress_callback: AbstractProgressCallback | None = None,
+    ) -> Mapping[int, Shape]:
+        progress_callback = progress_callback or NullProgressCallback()
         started_at = time.perf_counter()
 
         LOGGER.debug(
@@ -34,11 +43,20 @@ class ShapeManager:
             len(spectra),
         )
         try:
+
+            if self.plugin_config.select_detectors is not None:
+                spectra = {
+                    n: spectrum
+                    for n, spectrum in spectra.items()
+                    if n in self.plugin_config.select_detectors
+                }
+
             shapes = restore_shapes(
+                n_workers=self.plugin_config.max_workers,
                 spectra=spectra,
-                default_shape=self.default_shape,
-                n_workers=self.max_workers,
-                callback=self.pbar,
+                progress_callback=progress_callback,
+                draft_peak_config=self.draft_peak_config,
+                restore_shape_config=self.restore_shape_config,
             )
             return shapes
         finally:

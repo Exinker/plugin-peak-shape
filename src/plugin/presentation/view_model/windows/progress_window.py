@@ -1,33 +1,42 @@
-import os
-from typing import Sequence
+from collections.abc import Mapping
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from plugin.interfaces.gui.windows.utils import pave
+import plugin
+from plugin.config import PLUGIN_CONFIG
 
 
 class ProgressWindow(QtWidgets.QWidget):
 
-    def __init__(self, *args, flags: Sequence[QtCore.Qt.WindowType] | None = None, **kwargs):
+    def __init__(
+        self,
+        *args,
+        flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
 
         self.setObjectName('progressWindow')
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
+        # title
+        self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
 
         # flags
-        flags = flags or (QtCore.Qt.WindowType.Window, QtCore.Qt.WindowType.WindowStaysOnTopHint)
-        for flag in flags:
-            self.setWindowFlag(flag, True)
+        flags = flags or {
+            QtCore.Qt.WindowType.Window: True,
+            QtCore.Qt.WindowType.WindowStaysOnTopHint: True,
+        }
+        for key, value in flags.items():
+            self.setWindowFlag(key, value)
 
         # style
-        filepath = pave(os.path.join('.', 'static', 'progress-window.css'))
+        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'progress-window.css'
         style = open(filepath, 'r').read()
         self.setStyleSheet(style)
 
         # icon
-        filepath = pave(os.path.join('.', 'static', 'icon.ico'))
-        icon = QtGui.QIcon(filepath)
+        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'icon.ico'
+        icon = QtGui.QIcon(str(filepath))
         self.setWindowIcon(icon)
 
         # layout
@@ -54,13 +63,11 @@ class ProgressWindow(QtWidgets.QWidget):
             widget = self.findChild(QtWidgets.QLabel, 'messageLabel')
             widget.setText(message)
 
-        #
         app = QtWidgets.QApplication.instance()
         app.processEvents()
 
     def closeEvent(self, event):  # noqa: N802
 
-        # set empty widget
         self.setParent(None)
         event.accept()
 

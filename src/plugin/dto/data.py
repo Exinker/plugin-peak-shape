@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from plugin.dto.filepath import AtomFilepath
@@ -10,4 +10,4 @@ from spectrumlab.spectra import Spectrum
 class AtomData:
     filepath: AtomFilepath
     meta: AtomMeta
-    spectra: Sequence[Spectrum]
+    spectra: Mapping[int, Spectrum]

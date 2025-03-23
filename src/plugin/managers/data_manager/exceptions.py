@@ -23,3 +23,7 @@ class ParseMetaXMLError(ParseDataXMLError):
 
 class ParseSpectraXMLError(ParseDataXMLError):
     pass
+
+
+class InvalidDetectorTypeError(ParseSpectraXMLError):
+    pass

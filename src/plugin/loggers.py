@@ -1,8 +1,7 @@
 import logging
 import logging.config
-import os
 
-from plugin.config import LOGGING_LEVEL
+from plugin.config import PLUGIN_CONFIG
 
 
 def setdefault_logger():
@@ -25,21 +24,26 @@ def setdefault_logger():
             },
             file_handler={
                 'class': 'logging.FileHandler',
-                'level': LOGGING_LEVEL,
-                'filename': os.path.join('.', '.log'),
+                'level': PLUGIN_CONFIG.logging_level.value,
+                'filename': PLUGIN_CONFIG.plugin_path / '.log',
                 'mode': 'a',
                 'formatter': 'formatter',
                 'encoding': 'utf-8',
             },
         ),
 
-        loggers=dict(
-            app={
-                'level': LOGGING_LEVEL,
+        loggers={
+            'plugin-peak-shape': {
+                'level': PLUGIN_CONFIG.logging_level.value,
                 'handlers': ['file_handler', 'stream_handler'],
                 'propagate': False,
             },
-        ),
+            'spectrumlab': {
+                'level': PLUGIN_CONFIG.logging_level.value,
+                'handlers': ['file_handler', 'stream_handler'],
+                'propagate': False,
+            },
+        },
     )
 
     logging.config.dictConfig(config)

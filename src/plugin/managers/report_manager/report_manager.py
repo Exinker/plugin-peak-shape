@@ -1,32 +1,40 @@
 from collections.abc import Mapping, Sequence
 from typing import Any, NewType
 
+from plugin.config import (
+    PluginConfig,
+    RestoreShapeConfig,
+)
 from spectrumlab.peaks.shape import Shape
 
-
 T = NewType('T', Mapping[str, Any])
+
+REPORT_PREFIX = '<?xml version="1.0" encoding="UTF-8"?>'
 
 
 class ReportManager:
 
     def __init__(
         self,
-        default_shape: Shape,
-    ):
-        self.default_shape = default_shape
+        plugin_config: PluginConfig,
+        restore_shape_config: RestoreShapeConfig,
+    ) -> None:
+
+        self.plugin_config = plugin_config
+        self.restore_shape_config = restore_shape_config
 
     def build(
         self,
         shapes: Sequence[Shape],
         dump: bool = False,
-    ) -> 'ReportManager':
+    ) -> str:
 
         results = []
-        for i, shape in enumerate(shapes):
-            is_default = shape == self.default_shape
+        for n, shape in shapes.items():
+            is_default = shape == self.restore_shape_config.default_shape
 
             result = dict(
-                index=i,
+                index=n,
                 result=not is_default,
                 width=shape.width,
                 asymmetry=shape.asymmetry,
@@ -35,7 +43,7 @@ class ReportManager:
             results.append(result)
 
         report = '{prefix}<shapes>{results}</shapes>'.format(
-            prefix='<?xml version="1.0" encoding="UTF-8"?>',
+            prefix=REPORT_PREFIX,
             results=wrap(results),
         )
 
@@ -46,14 +54,24 @@ class ReportManager:
 
         return report
 
-    @staticmethod
+    @classmethod
+    def default(cls) -> str:
+        return '{prefix}{message}'.format(
+            prefix=REPORT_PREFIX,
+            message=wrap({'message': '\n'.join([
+                'Restoring shapes is failed!',
+                'Open `${ATOM_PATH}/Data/.log` to more information.',
+            ])}),
+        )
+
     def dump(
+        self,
         report: str,
         filename: str | None = None,
     ) -> None:
         filename = filename or 'results'
 
-        filepath = f'./{filename}.xml'
+        filepath = self.plugin_config.plugin_path / f'{filename}.xml'
         with open(filepath, 'w') as file:
             file.write(report)
 

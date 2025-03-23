@@ -11,14 +11,15 @@ build/
 data/
 dist/
 htmlcov/
+spd/
 tests/
 
 .coverage
+.log
 *.dat
 *.env
 *.in
 *.ipynb
-*.log
 *.xml
 
 .*.py

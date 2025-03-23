@@ -1,76 +1,39 @@
 import logging
-import os
 import sys
+from pathlib import Path
 
-root, _ = os.path.split(__file__)
+root = Path(__file__).parent.resolve()
 sys.path.extend([
-    os.path.join(root, r'.venv'),
-    os.path.join(root, r'.venv\Lib\site-packages'),
-    os.path.join(root, r'src'),
+    str(root / '.venv'),
+    str(root / '.venv\Lib\site-packages'),
+    str(root / 'src'),
 ])
 
-from plugin.config import DEFAULT_SHAPE, LOGGING_LEVEL, MAX_WORKERS, QUIET
-from plugin.interfaces.callbacks import NullCallback
+import plugin
+from plugin.config import (
+    DRAFT_PEAK_CONFIG,
+    PLUGIN_CONFIG,
+    RESTORE_SHAPE_CONFIG,
+)
 from plugin.loggers import *
-from plugin.managers.data_manager import DataManager, DataManagerError
-from plugin.managers.report_manager import ReportManager, ReportManagerError
-from plugin.managers.shape_manager import ShapeManager, ShapeManagerError
 from plugin.types import XML
 
-
-LOGGER = logging.getLogger('app')
-LOGGER.info('DEFAULT_SHAPE: %s', DEFAULT_SHAPE)
-LOGGER.info('LOGGING_LEVEL: %s', LOGGING_LEVEL)
-LOGGER.info('MAX_WORKERS: %s', MAX_WORKERS)
-LOGGER.info('QUIET: %s', QUIET)
+LOGGER = logging.getLogger('plugin-peak-shape')
+PLUGIN = plugin.plugin_factory()
 
 
-CALLBACK = NullCallback()
+def process_xml(config_xml: XML) -> str:
 
+    LOGGER.info('run %r', plugin.__name__)
+    LOGGER.info('DRAFT_PEAK_CONFIG: %s', DRAFT_PEAK_CONFIG)
+    LOGGER.info('PLUGIN_CONFIG: %s', PLUGIN_CONFIG)
+    LOGGER.info('RESTORE_SHAPE_CONFIG: %s', RESTORE_SHAPE_CONFIG)
 
-# @observe(quiet=QUIET)  # FIXME: не подгружается переменная
-def process_xml(config_xml: XML) -> str:  # TODO: добавить в сигнатуру передачу переменной `callback`;
-
-    try:
-        data_manager = DataManager(
-            xml=config_xml,
-            callback=CALLBACK,
-        )
-        try:
-            data = data_manager.parse()
-        except DataManagerError:
-            return ''
-
-        shape_manager = ShapeManager(
-            default_shape=DEFAULT_SHAPE,
-            max_workers=MAX_WORKERS,
-            callback=CALLBACK,
-        )
-        try:
-            shapes = shape_manager.restore(
-                spectra=data.spectra,
-            )
-        except ShapeManagerError:
-            return ''
-
-        report_manager = ReportManager(
-            default_shape=DEFAULT_SHAPE,
-        )
-        try:
-            report = report_manager.build(
-                shapes=shapes,
-                dump=True,
-            )
-        except ReportManagerError:
-            return ''
-
-        return report
-    finally:
-        LOGGER.info('Restoring shapes is completed!')
+    return PLUGIN.run(config_xml)
 
 
 if __name__ == '__main__':
     result = process_xml(
-        config_xml=r'<input>C:\Atom x64 3.3 (2024.03.02)\Temp\py_spe.xml</input>',
+        config_xml=r'<input>C:\Atom x64 3.3 (2025.03.18)\Temp\py_spe.xml</input>',
     )
     print(result)

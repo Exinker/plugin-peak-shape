@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "peak-shape-plugin"
-version = "0.1.0"
+version = "0.2.0"
 description = "Atom plugin for peak's shape estimation."
 readme = "README.md"
 keywords = [
@@ -21,9 +21,11 @@ maintainers = [
 ]
 license = {text = "MIT License"}
 dependencies = [
-    "pyside6>=6.8.2.1",
-    "python-dotenv>=1.0.1",
+    "pydantic==2.10.6",
+    "pydantic-settings==2.8.1",
+    "pyside6==6.8.1",
     "setuptools>=75.8.0",
+    "spectrumapp",
     "spectrumlab-tiny",
 ]
 requires-python = ">=3.12"
@@ -58,4 +60,5 @@ where = ["src"]
 "*" = ["*.csv", "*.md", "*.txt", "*.xml"]
 
 [tool.uv.sources]
-spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "0.1.0" }
+spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "1.0.0" }
+spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "master" }

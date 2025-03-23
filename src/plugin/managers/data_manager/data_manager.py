@@ -2,8 +2,8 @@ import logging
 import time
 
 from plugin.dto import AtomData
-from plugin.interfaces.callbacks import AbstractCallback
 from plugin.managers.data_manager.exceptions import (
+    DataManagerError,
     LoadDataXMLError,
     ParseDataXMLError,
     ParseFilepathXMLError,
@@ -14,34 +14,16 @@ from plugin.managers.data_manager.parsers import (
 )
 from plugin.types import XML
 
-
-LOGGER = logging.getLogger('app')
+LOGGER = logging.getLogger('plugin-peak-shape')
 
 
 class DataManager:
 
-    def __init__(
-        self,
-        xml: XML,
-        callback: AbstractCallback,
-    ) -> None:
-        self.xml = xml
-        self.callback = callback
-
-    def parse(self) -> AtomData:
-        n, total = 0, 2
-        self.callback(
-            progress=100 * n / total,
-            info='<strong>PLEASE, WAIT!</strong>',
-            message='DATA PARSING: {n}/{total} is complited!'.format(
-                n=n,
-                total=total,
-            ),
-        )
+    def parse(self, xml: XML) -> AtomData:
 
         started_at = time.perf_counter()
         try:
-            filepath = FilepathParser.parse(self.xml)
+            filepath = FilepathParser.parse(xml)
         except ParseFilepathXMLError as error:
             LOGGER.error('%r', error)
             raise
@@ -55,21 +37,12 @@ class DataManager:
                     ),
                 )
 
-        n, total = 1, 2
-        self.callback(
-            progress=100 * n / total,
-            info='<strong>PLEASE, WAIT!</strong>',
-            message='DATA PARSING: {n}/{total} is complited!'.format(
-                n=n,
-                total=total,
-            ),
-        )
         started_at = time.perf_counter()
         try:
             data = AtomDataParser.parse(filepath)
             return data
-        except (LoadDataXMLError, ParseDataXMLError):
-            return ''
+        except (LoadDataXMLError, ParseDataXMLError) as error:
+            raise DataManagerError from error
         finally:
             if LOGGER.isEnabledFor(logging.INFO):
                 LOGGER.info(
@@ -77,13 +50,3 @@ class DataManager:
                         elapsed=time.perf_counter() - started_at,
                     ),
                 )
-
-            n, total = 2, 2
-            self.callback(
-                progress=100 * n / total,
-                info='<strong>PLEASE, WAIT!</strong>',
-                message='DATA PARSING: {n}/{total} is complited!'.format(
-                    n=n,
-                    total=total,
-                ),
-            )
