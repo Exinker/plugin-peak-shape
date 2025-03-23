@@ -23,3 +23,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 * pass an exception to Atom
 * check Qt appliaction instance
+
+
+## [0.2.0] - 2025-03-23
+
+### Added
+* observability window
+* config for peak's drafting and peak's shape restoring
