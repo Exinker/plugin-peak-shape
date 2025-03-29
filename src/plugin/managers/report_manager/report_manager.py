@@ -5,7 +5,7 @@ from plugin.config import (
     PluginConfig,
     RestoreShapeConfig,
 )
-from spectrumlab.peaks.shape import Shape
+from spectrumlab.shapes import Shape
 
 T = NewType('T', Mapping[str, Any])
 

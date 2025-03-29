@@ -6,7 +6,9 @@ from typing import Callable
 from PySide6 import QtWidgets
 
 from plugin.presentation.view_model.windows import ObservabilityWindow
-from spectrumlab.peaks.shape import FIGURES
+from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
+    FIGURES,
+)
 from spectrumlab.spectra import Spectrum
 
 LOGGER = logging.getLogger('plugin-peak-shape')

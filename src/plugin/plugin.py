@@ -1,5 +1,4 @@
 from plugin.config import (
-    DRAFT_PEAK_CONFIG,
     PLUGIN_CONFIG,
     RESTORE_SHAPE_CONFIG,
 )
@@ -15,8 +14,6 @@ def plugin_factory() -> 'Plugin':
     data_manager = DataManager()
     shape_manager = ShapeManager(
         plugin_config=PLUGIN_CONFIG,
-        draft_peak_config=DRAFT_PEAK_CONFIG,
-        restore_shape_config=RESTORE_SHAPE_CONFIG,
     )
     report_manager = ReportManager(
         plugin_config=PLUGIN_CONFIG,

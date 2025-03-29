@@ -2,7 +2,7 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from plugin.config.utils import PLUGIN_PATH, SEP
-from spectrumlab.peaks.shape import Shape
+from spectrumlab.shapes import Shape
 
 
 DEFAULT_SHAPE = Shape(width=2, asymmetry=0, ratio=.1)

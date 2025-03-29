@@ -6,8 +6,8 @@ import numpy as np
 
 from plugin.managers.data_manager.exceptions import InvalidDetectorTypeError
 from plugin.types import XML
-from spectrumlab.emulations.detectors import Detector
-from spectrumlab.emulations.noise import Noise
+from spectrumlab.detectors import Detector
+from spectrumlab.noise import Noise
 from spectrumlab.spectra import Spectrum
 from spectrumlab.types import Array
 

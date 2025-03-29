@@ -3,14 +3,12 @@ import time
 from collections.abc import Mapping
 
 from plugin.config import (
-    DraftPeakConfig,
     PluginConfig,
-    RestoreShapeConfig,
 )
 from plugin.managers.shape_manager.core import restore_shapes
 from plugin.presentation.callbacks import AbstractProgressCallback, NullProgressCallback
 from plugin.presentation.view_model import progress_wrapper
-from spectrumlab.peaks.shape import Shape
+from spectrumlab.shapes import Shape
 from spectrumlab.spectra import Spectrum
 
 LOGGER = logging.getLogger('plugin-peak-shape')
@@ -20,14 +18,10 @@ class ShapeManager:
 
     def __init__(
         self,
-        plugin_config: DraftPeakConfig,
-        draft_peak_config: PluginConfig,
-        restore_shape_config: RestoreShapeConfig,
+        plugin_config: PluginConfig,
     ) -> None:
 
         self.plugin_config = plugin_config
-        self.draft_peak_config = draft_peak_config
-        self.restore_shape_config = restore_shape_config
 
     @progress_wrapper
     def restore(
@@ -55,8 +49,6 @@ class ShapeManager:
                 n_workers=self.plugin_config.max_workers,
                 spectra=spectra,
                 progress_callback=progress_callback,
-                draft_peak_config=self.draft_peak_config,
-                restore_shape_config=self.restore_shape_config,
             )
             return shapes
         finally:

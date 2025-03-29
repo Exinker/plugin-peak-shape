@@ -21,7 +21,7 @@ maintainers = [
 ]
 license = {text = "MIT License"}
 dependencies = [
-    "pydantic==2.10.6",
+    "pydantic==2.11.1",
     "pydantic-settings==2.8.1",
     "pyside6==6.8.1",
     "setuptools>=75.8.0",
@@ -60,5 +60,5 @@ where = ["src"]
 "*" = ["*.csv", "*.md", "*.txt", "*.xml"]
 
 [tool.uv.sources]
-spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "ea6cdd4" }
+spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "f906b9e" }
 spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "master" }

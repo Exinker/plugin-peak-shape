@@ -2,7 +2,7 @@ import logging
 import multiprocessing
 import os
 
-from spectrumlab.peaks.shape import Shape
+from spectrumlab.shapes import Shape
 
 
 LOGGER = logging.getLogger('app')
