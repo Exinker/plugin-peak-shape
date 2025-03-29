@@ -10,10 +10,6 @@ from spectrumlab.shapes import (
     Shape,
     retrieve_shape_from_spectrum,
 )
-from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
-    FIGURE,
-    FIGURES,
-)
 from spectrumlab.spectra import Spectrum
 
 LOGGER = logging.getLogger('plugin-peak-shape')
@@ -27,14 +23,13 @@ def restore_shape(__args) -> Shape:
         n,
     )
     try:
-        FIGURE.set(FIGURES.get()[n])
-
         peaks = draft_peaks(
             spectrum=spectrum,
         )
         shape = retrieve_shape_from_spectrum(
             spectrum=spectrum,
             peaks=peaks,
+            n=n,
         )
 
         # FIXME: Atom's lagacy (never change it!)
@@ -69,7 +64,7 @@ def restore_shapes(
     n_workers: int,
     spectra: Mapping[int, Spectrum],
     progress_callback: AbstractProgressCallback,
-) -> tuple[Shape]:
+) -> Mapping[int, Shape]:
 
     if n_workers > 1:
         return restore_shapes_multiprocess(
@@ -84,7 +79,6 @@ def restore_shapes(
 
         progress_callback(
             n=n,
-            total=len(spectra),
         )
         shapes[n] = shape
 
@@ -95,23 +89,21 @@ def restore_shapes_multiprocess(
     n_workers: int,
     spectra: Mapping[int, Spectrum],
     progress_callback: AbstractProgressCallback,
-) -> tuple[Shape]:
+) -> Mapping[int, Shape]:
 
-    shapes = []
+    shapes = {}
     with Pool(n_workers) as pool:
-        for shape in pool.imap(
+        for n, shape in enumerate(pool.imap(
             restore_shape,
             [
                 (n, spectrum)
-                for n, spectrum in enumerate(spectra)
+                for n, spectrum in spectra.items()
             ],
-        ):
-            shapes.append(shape)
+        )):
+            shapes[n] = shape
 
             progress_callback(
-                n=len(shapes),
-                total=len(spectra),
+                n=len(shapes)
             )
-            shapes.append(shape)
 
-    return tuple(shapes)
+    return shapes

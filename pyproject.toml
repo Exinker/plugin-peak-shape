@@ -60,5 +60,5 @@ where = ["src"]
 "*" = ["*.csv", "*.md", "*.txt", "*.xml"]
 
 [tool.uv.sources]
-spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "f906b9e" }
+spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "31978b0" }
 spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "master" }

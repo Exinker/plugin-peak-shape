@@ -6,15 +6,18 @@ import plugin
 from plugin.config import PLUGIN_CONFIG
 
 
-class ProgressWindow(QtWidgets.QWidget):
+class ProgressBarWindow(QtWidgets.QWidget):
 
     def __init__(
         self,
         *args,
+        total: int,
         flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+
+        self.total = total
 
         self.setObjectName('progressWindow')
 
@@ -22,9 +25,12 @@ class ProgressWindow(QtWidgets.QWidget):
         self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
 
         # flags
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.CustomizeWindowHint)
+
         flags = flags or {
+            # QtCore.Qt.WindowType.WindowStaysOnTopHint: True,
+            QtCore.Qt.WindowType.WindowCloseButtonHint: False,
             QtCore.Qt.WindowType.Window: True,
-            QtCore.Qt.WindowType.WindowStaysOnTopHint: True,
         }
         for key, value in flags.items():
             self.setWindowFlag(key, value)
@@ -48,20 +54,26 @@ class ProgressWindow(QtWidgets.QWidget):
         # geometry
         self.setFixedSize(QtCore.QSize(680, 200))
 
+    def update(self, n: int):
+
         # show window
         self.show()
 
-    def update(self, progress: int | None = None, info: str | None = None, message: str | None = None):
+        #
+        progress = 100*n/self.total
+        widget = self.findChild(QtWidgets.QProgressBar, 'progressBar')
+        widget.setValue(progress)
 
-        if progress:
-            widget = self.findChild(QtWidgets.QProgressBar, 'progressBar')
-            widget.setValue(progress)
-        if info:
-            widget = self.findChild(QtWidgets.QLabel, 'infoLabel')
-            widget.setText(info)
-        if message:
-            widget = self.findChild(QtWidgets.QLabel, 'messageLabel')
-            widget.setText(message)
+        info = '<strong>PLEASE, WAIT!</strong>'
+        widget = self.findChild(QtWidgets.QLabel, 'infoLabel')
+        widget.setText(info)
+
+        message = 'SHAPE ESTIMATION: {n}/{total} is complited!'.format(
+            n=n,
+            total=self.total,
+        )
+        widget = self.findChild(QtWidgets.QLabel, 'messageLabel')
+        widget.setText(message)
 
         app = QtWidgets.QApplication.instance()
         app.processEvents()

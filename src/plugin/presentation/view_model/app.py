@@ -5,9 +5,10 @@ from typing import Callable
 
 from PySide6 import QtWidgets
 
-from plugin.presentation.view_model.windows import ObservabilityWindow
-from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
-    FIGURES,
+from plugin.config import PLUGIN_CONFIG
+from plugin.presentation.view_model.windows import (
+    ProgressBarWindow,
+    ViewerWindow,
 )
 from spectrumlab.spectra import Spectrum
 
@@ -21,12 +22,17 @@ def progress_wrapper(func: Callable):
 
         app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
-        window = ObservabilityWindow(
-            n_tabs=len(spectra),
+        window = ViewerWindow(
+            total=len(spectra),
         )
-        window.show()
-
-        FIGURES.set(window.figures)
+        # if PLUGIN_CONFIG.max_workers == 1:
+        #     window = ViewerWindow(
+        #         total=len(spectra),
+        #     )
+        # else:
+        #     window = ProgressBarWindow(
+        #         total=len(spectra),
+        #     )
 
         try:
             result = func(
@@ -38,7 +44,9 @@ def progress_wrapper(func: Callable):
         except Exception:
             raise
         else:
-            app.exec()
+            if isinstance(window, ViewerWindow):
+                app.exec()
+
             return result
         finally:
             app.quit()
