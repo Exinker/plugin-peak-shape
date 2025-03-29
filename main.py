@@ -13,7 +13,7 @@ import plugin
 from plugin.config import (
     DRAFT_PEAK_CONFIG,
     PLUGIN_CONFIG,
-    RESTORE_SHAPE_CONFIG,
+    RETRIEVE_SHAPE_CONFIG,
 )
 from plugin.loggers import *
 from plugin.types import XML
@@ -27,7 +27,7 @@ def process_xml(config_xml: XML) -> str:
     LOGGER.info('run %r', plugin.__name__)
     LOGGER.info('DRAFT_PEAK_CONFIG: %s', DRAFT_PEAK_CONFIG)
     LOGGER.info('PLUGIN_CONFIG: %s', PLUGIN_CONFIG)
-    LOGGER.info('RESTORE_SHAPE_CONFIG: %s', RESTORE_SHAPE_CONFIG)
+    LOGGER.info('RETRIEVE_SHAPE_CONFIG: %s', RETRIEVE_SHAPE_CONFIG)
 
     return PLUGIN.run(config_xml)
 
