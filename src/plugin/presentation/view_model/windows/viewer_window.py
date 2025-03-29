@@ -390,7 +390,7 @@ class ContentWidget(QtWidgets.QTabWidget):
         return figures
 
     def get_tab_name(self, n: int) -> str:
-        return 'Detector {n}'.format(
+        return ' {n:>2} '.format(
             n=n+1,
         )
 

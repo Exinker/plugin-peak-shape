@@ -22,17 +22,14 @@ def progress_wrapper(func: Callable):
 
         app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
-        window = ViewerWindow(
-            total=len(spectra),
-        )
-        # if PLUGIN_CONFIG.max_workers == 1:
-        #     window = ViewerWindow(
-        #         total=len(spectra),
-        #     )
-        # else:
-        #     window = ProgressBarWindow(
-        #         total=len(spectra),
-        #     )
+        if PLUGIN_CONFIG.max_workers == 1:
+            window = ViewerWindow(
+                total=len(spectra),
+            )
+        else:
+            window = ProgressBarWindow(
+                total=len(spectra),
+            )
 
         try:
             result = func(

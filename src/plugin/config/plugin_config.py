@@ -51,6 +51,10 @@ class PluginConfig(BaseSettings):
             ])
 
         if isinstance(data, str):
+
+            if data == '':
+                return None
+
             values = map(int, data.replace(' ', '').split(SEP))
             return tuple([
                 value - 1

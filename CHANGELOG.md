@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 * logging for spectra parsers
-* progress bar
+* progress bar window
 
 
 ## [0.1.2] - 2025-02-25
@@ -26,6 +26,13 @@ All notable changes to this project will be documented in this file.
 
 
 ## [0.2.0] - 2025-03-23
+
+### Added
+* view window
+* config for peak's drafting and peak's shape restoring
+
+
+## [0.2.0] - 2025-03-30
 
 ### Added
 * observability window

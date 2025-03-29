@@ -2,6 +2,9 @@ import logging
 from collections.abc import Mapping
 from multiprocessing import Pool
 
+from plugin.config import (
+    RETRIEVE_SHAPE_CONFIG,
+)
 from plugin.presentation.callbacks import AbstractProgressCallback
 from spectrumlab.peaks import (
     draft_peaks,
@@ -20,7 +23,7 @@ def restore_shape(__args) -> Shape:
 
     LOGGER.debug(
         'detector %02d - restore peak\'s shape',
-        n,
+        n+1,
     )
     try:
         peaks = draft_peaks(
@@ -39,22 +42,17 @@ def restore_shape(__args) -> Shape:
             ratio=(1 - shape.ratio),
         )
 
-    except ValueError as error:
+    except Exception as error:
         LOGGER.warning(
             'detector %02d - shape is not restored: %r',
-            n,
+            n+1,
             error,
         )
-        LOGGER.debug(
-            'detector %02d - default shape is used: %r',
-            n,
-            restore_shape_config.default_shape,
-        )
-        return restore_shape_config.default_shape
+        return RETRIEVE_SHAPE_CONFIG.default_shape
 
-    LOGGER.debug(
-        'Restored peak\'s shape for detector %d: %s',
-        n,
+    LOGGER.info(
+        'detector %02d - shape is restored: %s',
+        n+1,
         shape,
     )
     return shape
@@ -103,7 +101,7 @@ def restore_shapes_multiprocess(
             shapes[n] = shape
 
             progress_callback(
-                n=len(shapes)
+                n=n
             )
 
     return shapes

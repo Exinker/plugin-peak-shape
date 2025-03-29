@@ -3,9 +3,11 @@ from typing import Any, NewType
 
 from plugin.config import (
     PluginConfig,
-    RestoreShapeConfig,
 )
 from spectrumlab.shapes import Shape
+from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
+    RetrieveShapeConfig,
+)
 
 T = NewType('T', Mapping[str, Any])
 
@@ -17,11 +19,11 @@ class ReportManager:
     def __init__(
         self,
         plugin_config: PluginConfig,
-        restore_shape_config: RestoreShapeConfig,
+        retrieve_shape_config: RetrieveShapeConfig,
     ) -> None:
 
         self.plugin_config = plugin_config
-        self.restore_shape_config = restore_shape_config
+        self.retrieve_shape_config = retrieve_shape_config
 
     def build(
         self,
@@ -31,7 +33,7 @@ class ReportManager:
 
         results = []
         for n, shape in shapes.items():
-            is_default = shape == self.restore_shape_config.default_shape
+            is_default = shape == self.retrieve_shape_config.default_shape
 
             result = dict(
                 index=n,

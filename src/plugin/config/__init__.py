@@ -1,10 +1,19 @@
-from .draft_peak_config import DraftPeakConfig, DRAFT_PEAK_CONFIG
+from spectrumlab.peaks import (
+    DraftPeaksConfig,
+)
+from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
+    RetrieveShapeConfig,
+)
+
 from .plugin_config import PluginConfig, PLUGIN_CONFIG
-from .restore_shape_config import RestoreShapeConfig, RESTORE_SHAPE_CONFIG
+
+
+DRAFT_PEAK_CONFIG = DraftPeaksConfig()
+RETRIEVE_SHAPE_CONFIG = RetrieveShapeConfig()
 
 
 __all__ = [
-    DraftPeakConfig, DRAFT_PEAK_CONFIG,
     PluginConfig, PLUGIN_CONFIG,
-    RestoreShapeConfig, RESTORE_SHAPE_CONFIG,
+    DRAFT_PEAK_CONFIG,
+    RETRIEVE_SHAPE_CONFIG,
 ]
