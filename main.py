@@ -1,8 +1,11 @@
 import logging
+import os
 import sys
 from pathlib import Path
 
+
 root = Path(__file__).parent.resolve()
+os.chdir(root)
 sys.path.extend([
     str(root / '.venv'),
     str(root / '.venv\Lib\site-packages'),
