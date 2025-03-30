@@ -1,4 +1,6 @@
+import os
 from collections.abc import Mapping
+from pathlib import Path
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -6,15 +8,18 @@ import plugin
 from plugin.config import PLUGIN_CONFIG
 
 
-class ProgressWindow(QtWidgets.QWidget):
+class ProgressBarWindow(QtWidgets.QWidget):
 
     def __init__(
         self,
         *args,
+        total: int,
         flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+
+        self.total = total
 
         self.setObjectName('progressWindow')
 
@@ -22,22 +27,27 @@ class ProgressWindow(QtWidgets.QWidget):
         self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
 
         # flags
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.CustomizeWindowHint)
+
         flags = flags or {
+            # QtCore.Qt.WindowType.WindowStaysOnTopHint: True,
+            QtCore.Qt.WindowType.WindowCloseButtonHint: False,
             QtCore.Qt.WindowType.Window: True,
-            QtCore.Qt.WindowType.WindowStaysOnTopHint: True,
         }
         for key, value in flags.items():
             self.setWindowFlag(key, value)
 
         # style
-        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'progress-window.css'
-        style = open(filepath, 'r').read()
-        self.setStyleSheet(style)
+        filepath = Path().resolve() / 'static' / 'progress-window.css'
+        if os.path.exists(filepath):
+            style = open(filepath, 'r').read()
+            self.setStyleSheet(style)
 
         # icon
-        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'icon.ico'
-        icon = QtGui.QIcon(str(filepath))
-        self.setWindowIcon(icon)
+        filepath = Path().resolve() / 'static' / 'icon.ico'
+        if os.path.exists(filepath):
+            icon = QtGui.QIcon(str(filepath))
+            self.setWindowIcon(icon)
 
         # layout
         layout = QtWidgets.QVBoxLayout(self)
@@ -51,17 +61,22 @@ class ProgressWindow(QtWidgets.QWidget):
         # show window
         self.show()
 
-    def update(self, progress: int | None = None, info: str | None = None, message: str | None = None):
+    def update(self, n: int):
 
-        if progress:
-            widget = self.findChild(QtWidgets.QProgressBar, 'progressBar')
-            widget.setValue(progress)
-        if info:
-            widget = self.findChild(QtWidgets.QLabel, 'infoLabel')
-            widget.setText(info)
-        if message:
-            widget = self.findChild(QtWidgets.QLabel, 'messageLabel')
-            widget.setText(message)
+        progress = 100*n/self.total
+        widget = self.findChild(QtWidgets.QProgressBar, 'progressBar')
+        widget.setValue(progress)
+
+        info = '<strong>PLEASE, WAIT!</strong>'
+        widget = self.findChild(QtWidgets.QLabel, 'infoLabel')
+        widget.setText(info)
+
+        message = 'RETRIEVE PEAK\'S SHAPE: {n}/{total} is complited!'.format(
+            n=n,
+            total=self.total,
+        )
+        widget = self.findChild(QtWidgets.QLabel, 'messageLabel')
+        widget.setText(message)
 
         app = QtWidgets.QApplication.instance()
         app.processEvents()

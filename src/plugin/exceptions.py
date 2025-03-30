@@ -22,7 +22,7 @@ def exception_wrapper(func):
             result = func(*args, **kwargs)
 
         except Exception as error:
-            LOGGER.error('Restoring shapes ware not completed successfully!')
+            LOGGER.warning('Restoring shapes ware not completed successfully!')
             raise get_initial_exception(error)
 
         else:
