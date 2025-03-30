@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "peak-shape-plugin"
-version = "0.3.0"
+version = "0.3.1"
 description = "Atom plugin to retrieve peak's shape."
 readme = "README.md"
 keywords = [
