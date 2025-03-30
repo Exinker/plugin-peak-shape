@@ -1,5 +1,7 @@
+import os
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, NewType
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -9,9 +11,11 @@ from matplotlib.figure import Figure
 import plugin
 from plugin.config import PLUGIN_CONFIG
 from spectrumapp.helpers import getdefault_object_name, find_tab
+from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
+    FIGURES,
+)
 from spectrumapp.types import Lims
 from spectrumapp.widgets.graph_widget import MplCanvas
-
 
 DEFAULT_SIZE = QtCore.QSize(640, 480)
 DEFAULT_LIMS = ((0, 1), (0, 1))
@@ -342,42 +346,40 @@ class ViewWidget(QtWidgets.QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self.spectrumViewWidget = SpectrumViewWidget()
-        layout.addWidget(self.spectrumViewWidget)
+        self.spectrum_view_widget = SpectrumViewWidget()
+        layout.addWidget(self.spectrum_view_widget)
 
-        self.shapeViewWidget = ShapeViewWidget()
-        layout.addWidget(self.shapeViewWidget)
+        self.shape_view_widget = ShapeViewWidget()
+        layout.addWidget(self.shape_view_widget)
 
     @property
     def figures(self) -> Mapping[str, Figure]:
 
-        figures = {
-            'spectrum': self.spectrumViewWidget.figure,
-            'shape': self.shapeViewWidget.figure,
+        return {
+            'spectrum': self.spectrum_view_widget.figure,
+            'shape': self.shape_view_widget.figure,
         }
-
-        return figures
 
     def update(self) -> None:
 
-        tab_widget = self.parent().parent()  # FIXME
-        tab_widget.setCurrentWidget(self)
+        content_widget = self.parent().parent()  # FIXME
+        content_widget.setCurrentWidget(self)
 
-        self.spectrumViewWidget.update()
-        self.shapeViewWidget.update()
+        self.spectrum_view_widget.update()
+        self.shape_view_widget.update()
 
 
-class TabViewWidget(QtWidgets.QTabWidget):
+class ContentWidget(QtWidgets.QTabWidget):
 
     def __init__(
         self,
         *args,
-        n_tabs: int,
+        total: int,
         **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
 
-        for n in range(n_tabs):
+        for n in range(total):
             self.addTab(ViewWidget(), self.get_tab_name(n=n))
 
     @property
@@ -390,7 +392,7 @@ class TabViewWidget(QtWidgets.QTabWidget):
         return figures
 
     def get_tab_name(self, n: int) -> str:
-        return 'Detector {n}'.format(
+        return ' {n:>2} '.format(
             n=n+1,
         )
 
@@ -400,12 +402,12 @@ class TabViewWidget(QtWidgets.QTabWidget):
         widget.update()
 
 
-class ObservabilityWindow(QtWidgets.QWidget):
+class ViewerWindow(QtWidgets.QWidget):
 
     def __init__(
         self,
         *args,
-        n_tabs: int,
+        total: int,
         flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ) -> None:
@@ -428,38 +430,41 @@ class ObservabilityWindow(QtWidgets.QWidget):
             self.setWindowFlag(key, value)
 
         # style
-        # filepath = CONFIG.plugin_path / 'static' / 'view-window.css'
-        # style = open(filepath, 'r').read()
-        # self.setStyleSheet(style)
+        filepath = Path().resolve() / 'static' / 'view-window.css'
+        if os.path.exists(filepath):
+            style = open(filepath, 'r').read()
+            self.setStyleSheet(style)
 
         # icon
-        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'icon.ico'
-        icon = QtGui.QIcon(str(filepath))
-        self.setWindowIcon(icon)
+        filepath = Path().resolve() / 'static' / 'icon.ico'
+        if os.path.exists(filepath):
+            icon = QtGui.QIcon(str(filepath))
+            self.setWindowIcon(icon)
 
         # layout
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self.tab_widget = TabViewWidget(
-            n_tabs=n_tabs,
+        self.content_widget = ContentWidget(
+            total=total,
         )
-        layout.addWidget(self.tab_widget)
+        layout.addWidget(self.content_widget)
 
         # geometry
-        self.setFixedSize(QtCore.QSize(1280, 720))
+        self.setFixedSize(self.sizeHint())
 
         # show window
         self.show()
 
-    @property
-    def figures(self) -> Sequence[Mapping[str, Figure]]:
-        return self.tab_widget.figures
+    def show(self) -> None:
+        FIGURES.set(self.content_widget.figures)
 
-    def update(self, n: int, total: int) -> None:
+        super().show()
 
-        self.tab_widget.update(
+    def update(self, n: int) -> None:
+
+        self.content_widget.update(
             n=n,
         )
 

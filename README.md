@@ -24,20 +24,29 @@
 ### ENV
 Преременные окружения плагина:
 - `LOGGING_LEVEL: 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' = 'INFO'` - уровень логгирования;
-- `MAX_WORKERS: int = 1` - запустить в многопроцессном режиме; ==- не поддерживается!==
+- `MAX_WORKERS: int = 1` - запустить в многопроцессном режиме;
 
 Преременные окружения алгоритма поиска пиков:
-- `N_COUNTS_MIN: int = 10` - минимальное количество отсчетов пика;
-- `N_COUNTS_MAX: int = 100` - максимальное количество отсчетов пика;
-- `EXCEPT_CLIPPED_PEAK: int = True` - исключить пики с "зашкаленными" отсчетами;
-- `EXCEPT_SLOPED_PEAK: int = True` - исключить пики с большим наклоном;
-- `EXCEPT_EDGES: int = False` - исключить крайние отсчеты пика;
-- `AMPLITUDE_MIN: float = 1` - минимальная амплатуда пика;
-- `SLOPE_MAX: float = 1` - максимальный уровень наклона пика;
-- `NOISE_LEVEL: int = 10` - уровень амплитуды пика относительно шума;
+- `DRAFT_PEAK_N_COUNTS_MIN=10` - минимальное количество отсчетов пика;
+- `DRAFT_PEAK_N_COUNTS_MAX=100` - максимальное количество отсчетов пика;
+- `DRAFT_PEAK_EXCEPT_CLIPPED_PEAK=True` - исключить пики с "зашкаленными" отсчетами;
+- `DRAFT_PEAK_EXCEPT_WIDE_PEAK=False` - исключить пики с шириной больше установленной;
+- `DRAFT_PEAK_EXCEPT_SLOPED_PEAK=True` - исключить пики с наклоном больше установленного;
+- `DRAFT_PEAK_EXCEPT_EDGES=False` - исключить крайние отсчеты пика;
+- `DRAFT_PEAK_AMPLITUDE_MIN=0` - минимальная амплатуда пика;
+- `DRAFT_PEAK_WIDTH_MAX=3.5` - максимальная ширина пика;
+- `DRAFT_PEAK_SLOPE_MAX=.25` - максимальный уровень наклона пика;
+- `DRAFT_PEAK_NOISE_LEVEL=10` - уровень амплитуды пика относительно шума;
+
+- `RETRIEVE_SHAPE_DEFAULT=2;0;.1` - формы контура линии по умолчанию;
+- `RETRIEVE_SHAPE_ERROR_MAX=.001` - максимальное отклонение пика от формы;
+- `RETRIEVE_SHAPE_ERROR_MEAN=.0001` - среднее отклонение пика от формы;
+- `RETRIEVE_SHAPE_N_PEAKS_FILTRATED_BY_WIDTH=None` - фильтрация пиков по ширине;
+- `RETRIEVE_SHAPE_N_PEAKS_MIN=10` - минимальное количество пиков;
+
 
 Преременные окружения алгоритма вычисления формы контура пика:
-- `DEFAULT_SHAPE: Shape = 2;0;0.1)` - формы контура линии по умолчанию;
-- `ERROR_MAX: float = 0.001` - максимальнок отклонение пика от формы;
-- `ERROR_MEAN: float = 0.0001` - средняя отклонение пика от формы;
-- `N_PEAKS_MIN: int = 10,` - минимальное количество пиков;
+- `DEFAULT_SHAPE: Shape = 2;0;0.1)` - 
+- `ERROR_MAX: float = 0.001` - 
+- `ERROR_MEAN: float = 0.0001` - 
+- `N_PEAKS_MIN: int = 10,` - 
