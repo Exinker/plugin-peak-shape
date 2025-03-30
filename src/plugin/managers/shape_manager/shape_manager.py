@@ -5,7 +5,7 @@ from collections.abc import Mapping
 from plugin.config import (
     PluginConfig,
 )
-from plugin.managers.shape_manager.core import restore_shapes
+from plugin.managers.shape_manager.core import retrieve_shapes
 from plugin.presentation.callbacks import AbstractProgressCallback, NullProgressCallback
 from plugin.presentation.view_model import progress_wrapper
 from spectrumlab.shapes import Shape
@@ -24,7 +24,7 @@ class ShapeManager:
         self.plugin_config = plugin_config
 
     @progress_wrapper
-    def restore(
+    def retrieve(
         self,
         spectra: Mapping[int, Spectrum],
         progress_callback: AbstractProgressCallback | None = None,
@@ -45,7 +45,7 @@ class ShapeManager:
                     if n in self.plugin_config.select_detectors
                 }
 
-            shapes = restore_shapes(
+            shapes = retrieve_shapes(
                 n_workers=self.plugin_config.max_workers,
                 spectra=spectra,
                 progress_callback=progress_callback,

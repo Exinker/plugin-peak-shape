@@ -1,4 +1,6 @@
+import os
 from collections.abc import Mapping
+from pathlib import Path
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -36,14 +38,16 @@ class ProgressBarWindow(QtWidgets.QWidget):
             self.setWindowFlag(key, value)
 
         # style
-        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'progress-window.css'
-        style = open(filepath, 'r').read()
-        self.setStyleSheet(style)
+        filepath = Path().resolve() / 'static' / 'progress-window.css'
+        if os.path.exists(filepath):
+            style = open(filepath, 'r').read()
+            self.setStyleSheet(style)
 
         # icon
-        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'icon.ico'
-        icon = QtGui.QIcon(str(filepath))
-        self.setWindowIcon(icon)
+        filepath = Path().resolve() / 'static' / 'icon.ico'
+        if os.path.exists(filepath):
+            icon = QtGui.QIcon(str(filepath))
+            self.setWindowIcon(icon)
 
         # layout
         layout = QtWidgets.QVBoxLayout(self)
@@ -54,12 +58,11 @@ class ProgressBarWindow(QtWidgets.QWidget):
         # geometry
         self.setFixedSize(QtCore.QSize(680, 200))
 
-    def update(self, n: int):
-
         # show window
         self.show()
 
-        #
+    def update(self, n: int):
+
         progress = 100*n/self.total
         widget = self.findChild(QtWidgets.QProgressBar, 'progressBar')
         widget.setValue(progress)
@@ -68,7 +71,7 @@ class ProgressBarWindow(QtWidgets.QWidget):
         widget = self.findChild(QtWidgets.QLabel, 'infoLabel')
         widget.setText(info)
 
-        message = 'SHAPE ESTIMATION: {n}/{total} is complited!'.format(
+        message = 'RETRIEVE PEAK\'S SHAPE: {n}/{total} is complited!'.format(
             n=n,
             total=self.total,
         )

@@ -6,8 +6,6 @@ from pathlib import Path
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from plugin.config.utils import PLUGIN_PATH, SEP
-
 
 DEFAULT_MAX_WORKERS = 1
 
@@ -27,14 +25,10 @@ class PluginConfig(BaseSettings):
     select_detectors: Sequence[int] | None = Field(None, alias='SELECT_DETECTORS')
 
     model_config = SettingsConfigDict(
-        env_file=PLUGIN_PATH / '.env',
+        env_file='.env',
         env_file_encoding='utf-8',
         extra='ignore',
     )
-
-    @property
-    def plugin_path(self) -> str | Path:
-        return PLUGIN_PATH
 
     @field_validator('select_detectors', mode='before')
     @classmethod
@@ -55,7 +49,7 @@ class PluginConfig(BaseSettings):
             if data == '':
                 return None
 
-            values = map(int, data.replace(' ', '').split(SEP))
+            values = map(int, data.replace(' ', '').split(';'))
             return tuple([
                 value - 1
                 for value in values

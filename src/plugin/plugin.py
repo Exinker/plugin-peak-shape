@@ -51,7 +51,7 @@ class Plugin:
         data = self.data_manager.parse(
             xml=xml,
         )
-        shapes = self.shape_manager.restore(
+        shapes = self.shape_manager.retrieve(
             spectra=data.spectra,
         )
         report = self.report_manager.build(

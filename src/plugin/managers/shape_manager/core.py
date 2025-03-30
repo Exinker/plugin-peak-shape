@@ -18,11 +18,11 @@ from spectrumlab.spectra import Spectrum
 LOGGER = logging.getLogger('plugin-peak-shape')
 
 
-def restore_shape(__args) -> Shape:
+def retrieve_shape(__args) -> Shape:
     n, spectrum  = __args
 
     LOGGER.debug(
-        'detector %02d - restore peak\'s shape',
+        'detector %02d - retrieve peak\'s shape',
         n+1,
     )
     try:
@@ -44,28 +44,28 @@ def restore_shape(__args) -> Shape:
 
     except Exception as error:
         LOGGER.warning(
-            'detector %02d - shape is not restored: %r',
+            'detector %02d - shape is not retrieved: %r',
             n+1,
             error,
         )
         return RETRIEVE_SHAPE_CONFIG.default_shape
 
     LOGGER.info(
-        'detector %02d - shape is restored: %s',
+        'detector %02d - shape is retrieved: %s',
         n+1,
         shape,
     )
     return shape
 
 
-def restore_shapes(
+def retrieve_shapes(
     n_workers: int,
     spectra: Mapping[int, Spectrum],
     progress_callback: AbstractProgressCallback,
 ) -> Mapping[int, Shape]:
 
     if n_workers > 1:
-        return restore_shapes_multiprocess(
+        return retrieve_shapes_multiprocess(
             n_workers=n_workers,
             spectra=spectra,
             progress_callback=progress_callback,
@@ -73,17 +73,15 @@ def restore_shapes(
 
     shapes = {}
     for n, spectrum in spectra.items():
-        shape = restore_shape((n, spectrum))
+        shape = retrieve_shape((n, spectrum))
 
-        progress_callback(
-            n=n,
-        )
         shapes[n] = shape
+        progress_callback(n=n)
 
     return shapes
 
 
-def restore_shapes_multiprocess(
+def retrieve_shapes_multiprocess(
     n_workers: int,
     spectra: Mapping[int, Spectrum],
     progress_callback: AbstractProgressCallback,
@@ -92,16 +90,13 @@ def restore_shapes_multiprocess(
     shapes = {}
     with Pool(n_workers) as pool:
         for n, shape in enumerate(pool.imap(
-            restore_shape,
+            retrieve_shape,
             [
                 (n, spectrum)
                 for n, spectrum in spectra.items()
             ],
         )):
             shapes[n] = shape
-
-            progress_callback(
-                n=n
-            )
+            progress_callback(n=n)
 
     return shapes

@@ -1,5 +1,7 @@
+import os
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, NewType
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -428,14 +430,16 @@ class ViewerWindow(QtWidgets.QWidget):
             self.setWindowFlag(key, value)
 
         # style
-        # filepath = CONFIG.plugin_path / 'static' / 'view-window.css'
-        # style = open(filepath, 'r').read()
-        # self.setStyleSheet(style)
+        filepath = Path().resolve() / 'static' / 'view-window.css'
+        if os.path.exists(filepath):
+            style = open(filepath, 'r').read()
+            self.setStyleSheet(style)
 
         # icon
-        filepath = PLUGIN_CONFIG.plugin_path / 'static' / 'icon.ico'
-        icon = QtGui.QIcon(str(filepath))
-        self.setWindowIcon(icon)
+        filepath = Path().resolve() / 'static' / 'icon.ico'
+        if os.path.exists(filepath):
+            icon = QtGui.QIcon(str(filepath))
+            self.setWindowIcon(icon)
 
         # layout
         layout = QtWidgets.QVBoxLayout(self)

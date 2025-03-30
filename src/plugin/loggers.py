@@ -25,7 +25,7 @@ def setdefault_logger():
             file_handler={
                 'class': 'logging.FileHandler',
                 'level': PLUGIN_CONFIG.logging_level.value,
-                'filename': PLUGIN_CONFIG.plugin_path / '.log',
+                'filename': '.log',
                 'mode': 'a',
                 'formatter': 'formatter',
                 'encoding': 'utf-8',

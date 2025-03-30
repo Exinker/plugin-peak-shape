@@ -73,7 +73,7 @@ class ReportManager:
     ) -> None:
         filename = filename or 'results'
 
-        filepath = self.plugin_config.plugin_path / f'{filename}.xml'
+        filepath = f'{filename}.xml'
         with open(filepath, 'w') as file:
             file.write(report)
 
