@@ -9,7 +9,6 @@ from matplotlib.backend_bases import KeyEvent, MouseEvent, PickEvent
 from matplotlib.figure import Figure
 
 import plugin
-from plugin.config import PLUGIN_CONFIG
 from spectrumapp.helpers import getdefault_object_name, find_tab
 from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
     FIGURES,

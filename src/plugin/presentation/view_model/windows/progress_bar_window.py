@@ -5,7 +5,6 @@ from pathlib import Path
 from PySide6 import QtCore, QtGui, QtWidgets
 
 import plugin
-from plugin.config import PLUGIN_CONFIG
 
 
 class ProgressBarWindow(QtWidgets.QWidget):
