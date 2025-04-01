@@ -1,6 +1,5 @@
 from plugin.config import (
     PLUGIN_CONFIG,
-    RETRIEVE_SHAPE_CONFIG,
 )
 from plugin.exceptions import exception_wrapper
 from plugin.managers.data_manager import DataManager
@@ -17,7 +16,6 @@ def plugin_factory() -> 'Plugin':
     )
     report_manager = ReportManager(
         plugin_config=PLUGIN_CONFIG,
-        retrieve_shape_config=RETRIEVE_SHAPE_CONFIG,
     )
 
     return Plugin(

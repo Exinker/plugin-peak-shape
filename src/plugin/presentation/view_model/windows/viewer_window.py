@@ -10,7 +10,7 @@ from matplotlib.figure import Figure
 
 import plugin
 from spectrumapp.helpers import getdefault_object_name, find_tab
-from spectrumlab.shapes.factories.retrieve_shape_from_spectrum import (
+from spectrumlab.shapes.retrieve_peak_shape.retrieve_shape_from_spectrum import (
     FIGURES,
 )
 from spectrumapp.types import Lims

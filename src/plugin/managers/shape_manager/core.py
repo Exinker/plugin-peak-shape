@@ -2,16 +2,13 @@ import logging
 from collections.abc import Mapping
 from multiprocessing import Pool
 
-from plugin.config import (
-    RETRIEVE_SHAPE_CONFIG,
-)
 from plugin.presentation.callbacks import AbstractProgressCallback
 from spectrumlab.peaks import (
     draft_peaks,
 )
 from spectrumlab.shapes import (
     Shape,
-    retrieve_shape_from_spectrum,
+    retrieve_shape_from_spectrum, RETRIEVE_SHAPE_CONFIG,
 )
 from spectrumlab.spectra import Spectrum
 

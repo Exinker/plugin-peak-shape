@@ -1,6 +1,6 @@
 # PEAK-SHAPE
 
-**PEAK-SHAPE** - плагин для ПО [Атом](https://www.vmk.ru/product/programmnoe_obespechenie/atom.html) для расчета формы контура спектральной линии.
+**PEAK-SHAPE** - плагин для ПО [Атом](https://www.vmk.ru/product/programmnoe_obespechenie/atom.html) для расчета формы контура пика.
 
 
 ## Author Information:
@@ -16,7 +16,7 @@
 1. Зайти в папку с плагинами: `cd ATOM_PATH\Plugins\python`;
 2. Установить пакетный менеджер `uv`: `pip install uv`;
 3. Клонировать проект с удаленного репозитория: `git clone https://github.com/Exinker/plugin-peak-shape.git`;
-4. Зайти в папку с плагином для расчета формы контура линии: `cd plugin-peak-shape`;
+4. Зайти в папку с плагином для расчета формы контура пика: `cd plugin-peak-shape`;
 5. Создать виртуальное окружение и установить необходимые зависимости: `uv sync --no-dev`;
 
 ## Usage
@@ -39,7 +39,10 @@
 - `DRAFT_PEAK_NOISE_LEVEL=10` - уровень амплитуды пика относительно шума;
 
 Преременные окружения алгоритма вычисления формы контура пика:
-- `RETRIEVE_SHAPE_DEFAULT=2;0;.1` - формы контура линии по умолчанию;
+- `RETRIEVE_SHAPE_DEFAULT=2;0;.1` - форма контура пика по умолчанию;
+- `RETRIEVE_SHAPE_MIN_WIDTH` - минимальная ширина формы контура пика;
+- `RETRIEVE_SHAPE_MAX_WIDTH` - максимальная ширина формы контура пика;
+- `RETRIEVE_SHAPE_MAX_ASYMMETRY` - максимальная асимметрия формы контура пика;
 - `RETRIEVE_SHAPE_ERROR_MAX=.001` - максимальное отклонение пика от формы;
 - `RETRIEVE_SHAPE_ERROR_MEAN=.0001` - среднее отклонение пика от формы;
 - `RETRIEVE_SHAPE_N_PEAKS_FILTRATED_BY_WIDTH=None` - фильтрация пиков по ширине;

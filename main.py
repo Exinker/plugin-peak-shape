@@ -14,12 +14,17 @@ sys.path.extend([
 
 import plugin
 from plugin.config import (
-    DRAFT_PEAK_CONFIG,
     PLUGIN_CONFIG,
-    RETRIEVE_SHAPE_CONFIG,
 )
 from plugin.loggers import *
 from plugin.types import XML
+from spectrumlab.peaks.draft_peaks import (
+    DRAFT_PEAKS_CONFIG,
+)
+from spectrumlab.shapes.retrieve_peak_shape import (
+    RETRIEVE_SHAPE_CONFIG,
+)
+
 
 LOGGER = logging.getLogger('plugin-peak-shape')
 PLUGIN = plugin.plugin_factory()
@@ -28,7 +33,7 @@ PLUGIN = plugin.plugin_factory()
 def process_xml(config_xml: XML) -> str:
 
     LOGGER.info('run %r', plugin.__name__)
-    LOGGER.info('DRAFT_PEAK_CONFIG: %s', DRAFT_PEAK_CONFIG)
+    LOGGER.info('DRAFT_PEAKS_CONFIG: %s', DRAFT_PEAKS_CONFIG)
     LOGGER.info('PLUGIN_CONFIG: %s', PLUGIN_CONFIG)
     LOGGER.info('RETRIEVE_SHAPE_CONFIG: %s', RETRIEVE_SHAPE_CONFIG)
 
