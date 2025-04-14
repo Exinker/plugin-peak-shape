@@ -4,6 +4,7 @@ from collections.abc import Mapping
 
 import numpy as np
 
+from plugin.config import PLUGIN_CONFIG
 from plugin.managers.data_manager.exceptions import InvalidDetectorTypeError
 from plugin.types import XML
 from spectrumlab.detectors import Detector
@@ -26,12 +27,14 @@ class AtomSpectraParser:
 
                 n_detectors = parse_n_detectors(probe)
                 detector_size = parse_detector_size(probe)
+
+                n_numbers = detector_size * n_detectors
                 n_frames = parse_n_frames(probe)
 
                 wavelength = parse_wavelength(probe)
                 intensity = parse_intensity(probe)
                 detector_size = parse_detector_size(probe)
-                clipped = parse_clipped(probe, n_numbers=detector_size*n_detectors)
+                clipped = parse_clipped(probe, n_numbers=n_numbers)
 
                 detector = get_detector(detector_size)
                 noise = Noise(
@@ -89,6 +92,9 @@ def parse_n_frames(__probe: XML) -> int:
         return int(__probe.find(xpath).text)
     except Exception:
         LOGGER.error("Parse `detector_size` is failed. Check xpath: %r", xpath)
+
+        if PLUGIN_CONFIG.skip_data_exceptions:
+            return 1
         raise
 
 
@@ -115,12 +121,15 @@ def parse_intensity(__probe: XML) -> Array[float]:
 def parse_clipped(__probe: XML, n_numbers: int) -> Array[bool]:
     xpath = 'spe/data/ovl'
 
+    mask = np.full(n_numbers, False)
     try:
-        mask = np.full(n_numbers, False)
         mask[numpy_array_from_b64(__probe.find(xpath).text, dtype=np.int32)] = True
         return mask
     except Exception:
         LOGGER.error("Parse `intensity` is failed. Check xpath: %r", xpath)
+
+        if PLUGIN_CONFIG.skip_data_exceptions:
+            return mask
         raise
 
 

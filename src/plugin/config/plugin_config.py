@@ -22,6 +22,7 @@ class PluginConfig(BaseSettings):
     logging_level: LoggingLevel = Field(LoggingLevel.INFO, alias='LOGGING_LEVEL')
     max_workers: int = Field(DEFAULT_MAX_WORKERS, ge=1, le=multiprocessing.cpu_count(), alias='MAX_WORKERS')
     select_detectors: Sequence[int] | None = Field(None, alias='SELECT_DETECTORS')
+    skip_data_exceptions: bool = Field(False, alias='SKIP_DATA_EXCEPTIONS')
 
     model_config = SettingsConfigDict(
         env_file='.env',
