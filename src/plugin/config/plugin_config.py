@@ -21,7 +21,6 @@ class PluginConfig(BaseSettings):
 
     logging_level: LoggingLevel = Field(LoggingLevel.INFO, alias='LOGGING_LEVEL')
     max_workers: int = Field(DEFAULT_MAX_WORKERS, ge=1, le=multiprocessing.cpu_count(), alias='MAX_WORKERS')
-    select_detectors: Sequence[int] | None = Field(None, alias='SELECT_DETECTORS')
     skip_data_exceptions: bool = Field(False, alias='SKIP_DATA_EXCEPTIONS')
 
     model_config = SettingsConfigDict(
@@ -29,33 +28,6 @@ class PluginConfig(BaseSettings):
         env_file_encoding='utf-8',
         extra='ignore',
     )
-
-    @field_validator('select_detectors', mode='before')
-    @classmethod
-    def validate_select_detectors(cls, data: str | None) -> int | tuple[int] | None:
-
-        if data is None:
-            return None
-
-        if isinstance(data, int):
-            values = tuple([data])
-            return tuple([
-                value - 1
-                for value in values
-            ])
-
-        if isinstance(data, str):
-
-            if data == '':
-                return None
-
-            values = map(int, data.replace(' ', '').split(';'))
-            return tuple([
-                value - 1
-                for value in values
-            ])
-
-        raise TypeError(f'Type of select_detectors {repr(data)} is not supported yet!')
 
 
 PLUGIN_CONFIG = PluginConfig()

@@ -3,14 +3,10 @@ from collections.abc import Mapping
 from multiprocessing import Pool
 
 from plugin.presentation.callbacks import AbstractProgressCallback
-from spectrumlab.peaks import (
-    draft_peaks,
-)
-from spectrumlab.shapes import (
-    Shape,
-    retrieve_shape_from_spectrum, RETRIEVE_SHAPE_CONFIG,
-)
+from spectrumlab.peaks import draft_peaks
+from spectrumlab.shapes import Shape, retrieve_shape_from_spectrum, RETRIEVE_SHAPE_CONFIG
 from spectrumlab.spectra import Spectrum
+
 
 LOGGER = logging.getLogger('plugin-peak-shape')
 
@@ -31,12 +27,10 @@ def retrieve_shape(__args) -> Shape:
             peaks=peaks,
             n=n,
         )
-
-        # FIXME: Atom's lagacy (never change it!)
         shape = Shape(
             width=shape.width,
             asymmetry=shape.asymmetry,
-            ratio=(1 - shape.ratio),
+            ratio=(1 - shape.ratio),  # Atom's lagacy: never change it!
         )
 
     except Exception as error:

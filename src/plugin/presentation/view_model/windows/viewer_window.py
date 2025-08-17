@@ -373,32 +373,36 @@ class ContentWidget(QtWidgets.QTabWidget):
     def __init__(
         self,
         *args,
-        total: int,
+        indexes: Sequence[int],
         **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
 
-        for n in range(total):
-            self.addTab(ViewWidget(), self.get_tab_name(n=n))
+        self.indexes = indexes
+
+        for index in indexes:
+            self.addTab(ViewWidget(), self.get_tab_name(index))
 
     @property
     def figures(self) -> Sequence[Mapping[str, Figure]]:
 
-        figures = []
-        for n in range(self.count()):
-            figures.append(self.widget(n).figures)
+        figures = {}
+        for n, index in enumerate(self.indexes):
+            figures[index] = self.widget(n).figures
 
         return figures
 
-    def get_tab_name(self, n: int) -> str:
-        return ' {n:>2} '.format(
-            n=n+1,
-        )
-
     def update(self, n: int) -> None:
 
-        widget = find_tab(self, text=self.get_tab_name(n=n))
+        widget = find_tab(self, text=self.get_tab_name(n))
         widget.update()
+
+    @staticmethod
+    def get_tab_name(__index: int) -> str:
+
+        return ' {n:>2} '.format(
+            n=__index + 1,
+        )
 
 
 class ViewerWindow(QtWidgets.QWidget):
@@ -406,7 +410,7 @@ class ViewerWindow(QtWidgets.QWidget):
     def __init__(
         self,
         *args,
-        total: int,
+        indexes: Sequence[int],
         flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ) -> None:
@@ -446,7 +450,7 @@ class ViewerWindow(QtWidgets.QWidget):
         layout.setSpacing(5)
 
         self.content_widget = ContentWidget(
-            total=total,
+            indexes=indexes,
         )
         layout.addWidget(self.content_widget)
 

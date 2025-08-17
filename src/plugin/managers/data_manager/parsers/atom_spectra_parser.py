@@ -1,6 +1,6 @@
 import logging
 from base64 import b64decode
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 
 import numpy as np
 
@@ -20,7 +20,7 @@ class AtomSpectraParser:
     @classmethod
     def from_xml(cls, xml: XML) -> Mapping[int, Spectrum]:
 
-        spectra = []
+        spectra = {}
         for probe in xml.find('probes').findall('probe'):
             is_not_empty = len(probe.findall('spe')) > 0
             if is_not_empty:
@@ -45,7 +45,7 @@ class AtomSpectraParser:
                 for i in range(n_detectors):
                     number = np.arange(detector_size * i, detector_size * (i + 1))
 
-                    spe = Spectrum(
+                    spectrum = Spectrum(
                         intensity=intensity[number],
                         wavelength=wavelength[number],
                         clipped=clipped[number],
@@ -53,12 +53,17 @@ class AtomSpectraParser:
                         deviation=noise(intensity[number]),
                         detector=detector,  # TODO: read from xml!
                     )
-                    spectra.append(spe)
+                    spectra[i] = spectrum
 
-        return {
-            i: spectrum
-            for i, spectrum in enumerate(spectra)
-        }
+        selected_detectors = parse_selected_detectors(xml.find('crystals'))
+        if selected_detectors:
+            return {
+                i: spectrum
+                for i, spectrum in spectra.items()
+                if i in selected_detectors
+            }
+
+        return spectra
 
 
 def numpy_array_from_b64(buffer: str, dtype: type) -> Array[float]:
@@ -131,6 +136,21 @@ def parse_clipped(__probe: XML, n_numbers: int) -> Array[bool]:
         if PLUGIN_CONFIG.skip_data_exceptions:
             return mask
         raise
+
+
+def parse_selected_detectors(__crystals: XML | None) -> Sequence[int]:
+
+    if __crystals is None:
+        return []
+
+    try:
+        return tuple(map(int, [
+            item.attrib['val']
+            for item in __crystals.findall('item')
+        ]))
+    except Exception:
+        LOGGER.warning("Parse `selected_crystals` is failed. Check xpath: %r", 'crystals')
+        return []
 
 
 def get_detector(detector_size: int) -> Detector:

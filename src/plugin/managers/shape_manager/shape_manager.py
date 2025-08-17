@@ -37,14 +37,6 @@ class ShapeManager:
             len(spectra),
         )
         try:
-
-            if self.plugin_config.select_detectors is not None:
-                spectra = {
-                    n: spectrum
-                    for n, spectrum in spectra.items()
-                    if n in self.plugin_config.select_detectors
-                }
-
             shapes = retrieve_shapes(
                 n_workers=self.plugin_config.max_workers,
                 spectra=spectra,

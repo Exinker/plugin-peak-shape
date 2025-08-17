@@ -1441,11 +1441,9 @@ wheels = [
 
 [[package]]
 name = "peak-shape-plugin"
-version = "0.3.2"
+version = "0.3.3"
 source = { editable = "." }
 dependencies = [
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
     { name = "pyside6" },
     { name = "setuptools" },
     { name = "spectrumapp" },
@@ -1483,12 +1481,10 @@ testing = [
 
 [package.metadata]
 requires-dist = [
-    { name = "pydantic", specifier = "==2.11.1" },
-    { name = "pydantic-settings", specifier = "==2.8.1" },
     { name = "pyside6", specifier = "==6.8.1" },
     { name = "setuptools", specifier = ">=75.8.0" },
     { name = "spectrumapp", git = "https://github.com/Exinker/spectrumapp?rev=master" },
-    { name = "spectrumlab-tiny", git = "https://github.com/Exinker/spectrumlab-tiny?rev=ef3134a" },
+    { name = "spectrumlab-tiny", git = "https://github.com/Exinker/spectrumlab-tiny?rev=53a398f" },
 ]
 
 [package.metadata.requires-dev]
@@ -2250,7 +2246,7 @@ dependencies = [
 [[package]]
 name = "spectrumlab-tiny"
 version = "2.1.0"
-source = { git = "https://github.com/Exinker/spectrumlab-tiny?rev=ef3134a#ef3134a10b80ed16cd46f0697fa457ae53be63ea" }
+source = { git = "https://github.com/Exinker/spectrumlab-tiny?rev=53a398f#53a398fa3645c50df92a44c6df9438d624854f07" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },

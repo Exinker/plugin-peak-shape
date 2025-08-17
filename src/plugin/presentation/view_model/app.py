@@ -24,7 +24,7 @@ def progress_wrapper(func: Callable):
 
         if PLUGIN_CONFIG.max_workers == 1:
             window = ViewerWindow(
-                total=len(spectra),
+                indexes=tuple(spectra.keys()),
             )
         else:
             window = ProgressBarWindow(
