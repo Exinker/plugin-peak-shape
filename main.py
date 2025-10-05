@@ -16,8 +16,8 @@ import plugin
 from plugin.config import PLUGIN_CONFIG
 from plugin.loggers import *
 from plugin.types import XML
-from spectrumlab.peaks.draft_peaks import DRAFT_PEAKS_CONFIG
-from spectrumlab.shapes.retrieve_peak_shape import RETRIEVE_SHAPE_CONFIG
+from spectrumlab.peaks.blink_peaks.draft_blinks import DRAFT_BLINKS_CONFIG
+from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import RETRIEVE_SHAPE_CONFIG
 
 
 LOGGER = logging.getLogger('plugin-peak-shape')
@@ -27,7 +27,7 @@ PLUGIN = plugin.plugin_factory()
 def process_xml(config_xml: XML) -> str:
 
     LOGGER.info('run %r', plugin.__name__)
-    LOGGER.info('DRAFT_PEAKS_CONFIG: %s', DRAFT_PEAKS_CONFIG)
+    LOGGER.info('DRAFT_BLINKS_CONFIG: %s', DRAFT_BLINKS_CONFIG)
     LOGGER.info('PLUGIN_CONFIG: %s', PLUGIN_CONFIG)
     LOGGER.info('RETRIEVE_SHAPE_CONFIG: %s', RETRIEVE_SHAPE_CONFIG)
 
@@ -36,6 +36,6 @@ def process_xml(config_xml: XML) -> str:
 
 if __name__ == '__main__':
     result = process_xml(
-        config_xml=r'<input>C:\Atom x64 3.3 (2025.05.14)\Temp\py_spe.xml</input>',
+        config_xml=r'<input>C:\Atom x64 3.3 (2025.08.29)\Temp\py_spe.xml</input>',
     )
     print(result)

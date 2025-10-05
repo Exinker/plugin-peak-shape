@@ -9,12 +9,11 @@ from matplotlib.backend_bases import KeyEvent, MouseEvent, PickEvent
 from matplotlib.figure import Figure
 
 import plugin
-from spectrumapp.helpers import getdefault_object_name, find_tab
-from spectrumlab.shapes.retrieve_peak_shape.retrieve_shape_from_spectrum import (
-    FIGURES,
-)
+from spectrumapp.helpers import find_tab, getdefault_object_name
 from spectrumapp.types import Lims
 from spectrumapp.widgets.graph_widget import MplCanvas
+from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import Canvas, CANVAS
+
 
 DEFAULT_SIZE = QtCore.QSize(640, 480)
 DEFAULT_LIMS = ((0, 1), (0, 1))
@@ -352,11 +351,11 @@ class ViewWidget(QtWidgets.QWidget):
         layout.addWidget(self.shape_view_widget)
 
     @property
-    def figures(self) -> Mapping[str, Figure]:
+    def canvas(self) -> Canvas:
 
         return {
-            'spectrum': self.spectrum_view_widget.figure,
-            'shape': self.shape_view_widget.figure,
+            'spectrum': self.spectrum_view_widget.figure.gca(),
+            'shape': self.shape_view_widget.figure.gca(),
         }
 
     def update(self) -> None:
@@ -384,13 +383,13 @@ class ContentWidget(QtWidgets.QTabWidget):
             self.addTab(ViewWidget(), self.get_tab_name(index))
 
     @property
-    def figures(self) -> Sequence[Mapping[str, Figure]]:
+    def canvas(self) -> Sequence[Canvas]:
 
-        figures = {}
+        canvas = {}
         for n, index in enumerate(self.indexes):
-            figures[index] = self.widget(n).figures
+            canvas[index] = self.widget(n).canvas
 
-        return figures
+        return canvas
 
     def update(self, n: int) -> None:
 
@@ -461,7 +460,7 @@ class ViewerWindow(QtWidgets.QWidget):
         self.show()
 
     def show(self) -> None:
-        FIGURES.set(self.content_widget.figures)
+        CANVAS.set(self.content_widget.canvas)
 
         super().show()
 
