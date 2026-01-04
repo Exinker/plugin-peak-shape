@@ -3,15 +3,18 @@ from collections.abc import Mapping
 from multiprocessing import Pool
 
 from plugin.presentation.callbacks import AbstractProgressCallback
-from spectrumlab.peaks import draft_peaks
-from spectrumlab.shapes import Shape, retrieve_shape_from_spectrum, RETRIEVE_SHAPE_CONFIG
+from spectrumlab.peaks.analyte_peaks.shapes.peak_shape import PeakShape
+from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import (
+    retrieve_shape_from_spectrum, N, RETRIEVE_SHAPE_CONFIG,
+)
+from spectrumlab.peaks.blink_peaks.draft_blinks import draft_blinks
 from spectrumlab.spectra import Spectrum
 
 
 LOGGER = logging.getLogger('plugin-peak-shape')
 
 
-def retrieve_shape(__args) -> Shape:
+def retrieve_shape(__args) -> PeakShape:
     n, spectrum  = __args
 
     LOGGER.debug(
@@ -19,15 +22,16 @@ def retrieve_shape(__args) -> Shape:
         n+1,
     )
     try:
-        peaks = draft_peaks(
+        N.set(n)
+
+        peaks = draft_blinks(
             spectrum=spectrum,
         )
         shape = retrieve_shape_from_spectrum(
             spectrum=spectrum,
             peaks=peaks,
-            n=n,
         )
-        shape = Shape(
+        shape = PeakShape(
             width=shape.width,
             asymmetry=shape.asymmetry,
             ratio=(1 - shape.ratio),  # Atom's lagacy: never change it!
@@ -53,7 +57,7 @@ def retrieve_shapes(
     n_workers: int,
     spectra: Mapping[int, Spectrum],
     progress_callback: AbstractProgressCallback,
-) -> Mapping[int, Shape]:
+) -> Mapping[int, PeakShape]:
 
     if n_workers > 1:
         return retrieve_shapes_multiprocess(
@@ -76,7 +80,7 @@ def retrieve_shapes_multiprocess(
     n_workers: int,
     spectra: Mapping[int, Spectrum],
     progress_callback: AbstractProgressCallback,
-) -> Mapping[int, Shape]:
+) -> Mapping[int, PeakShape]:
 
     shapes = {}
     with Pool(n_workers) as pool:

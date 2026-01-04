@@ -8,8 +8,8 @@ from plugin.config import PLUGIN_CONFIG
 from plugin.managers.data_manager.exceptions import InvalidDetectorTypeError
 from plugin.types import XML
 from spectrumlab.detectors import Detector
-from spectrumlab.noise import Noise
-from spectrumlab.spectra import Spectrum
+from spectrumlab.noises import EmittedSpectrumNoise as Noise
+from spectrumlab.spectra import EmittedSpectrum as Spectrum
 from spectrumlab.types import Array
 
 LOGGER = logging.getLogger('plugin-peak-shape')

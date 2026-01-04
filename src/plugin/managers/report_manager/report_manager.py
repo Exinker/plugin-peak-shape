@@ -4,12 +4,11 @@ from typing import Any, NewType
 from plugin.config import (
     PluginConfig,
 )
-from spectrumlab.shapes import (
-    Shape,
-    RETRIEVE_SHAPE_CONFIG,
-)
+from spectrumlab.peaks.analyte_peaks.shapes import PeakShape
+from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import RETRIEVE_SHAPE_CONFIG
 
 T = NewType('T', Mapping[str, Any])
+
 
 REPORT_PREFIX = '<?xml version="1.0" encoding="UTF-8"?>'
 
@@ -25,7 +24,7 @@ class ReportManager:
 
     def build(
         self,
-        shapes: Sequence[Shape],
+        shapes: Sequence[PeakShape],
         dump: bool = False,
     ) -> str:
 

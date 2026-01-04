@@ -1447,7 +1447,7 @@ dependencies = [
     { name = "pyside6" },
     { name = "setuptools" },
     { name = "spectrumapp" },
-    { name = "spectrumlab-tiny" },
+    { name = "spectrumlab" },
 ]
 
 [package.dev-dependencies]
@@ -1484,7 +1484,7 @@ requires-dist = [
     { name = "pyside6", specifier = "==6.8.1" },
     { name = "setuptools", specifier = ">=75.8.0" },
     { name = "spectrumapp", git = "https://github.com/Exinker/spectrumapp?rev=master" },
-    { name = "spectrumlab-tiny", git = "https://github.com/Exinker/spectrumlab-tiny?rev=53a398f" },
+    { name = "spectrumlab", git = "https://github.com/Exinker/spectrumlab" },
 ]
 
 [package.metadata.requires-dev]
@@ -2244,9 +2244,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "spectrumlab-tiny"
-version = "2.1.0"
-source = { git = "https://github.com/Exinker/spectrumlab-tiny?rev=53a398f#53a398fa3645c50df92a44c6df9438d624854f07" }
+name = "spectrumlab"
+version = "0.8.2"
+source = { git = "https://github.com/Exinker/spectrumlab#16b24b1340994a379b112df6e49c4add9002c1f5" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
@@ -2254,6 +2254,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "scipy" },
+    { name = "tqdm" },
 ]
 
 [[package]]
@@ -2325,6 +2326,18 @@ wheels = [
 ]
 
 [[package]]
+name = "tqdm"
+version = "4.67.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2", size = 169737 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d0/30/dc54f88dd4a2b5dc8a0279bdd7270e735851848b762aeb1c1184ed1f6b14/tqdm-4.67.1-py3-none-any.whl", hash = "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2", size = 78540 },
+]
+
+[[package]]
 name = "traitlets"
 version = "5.14.3"
 source = { registry = "https://pypi.org/simple" }
@@ -2353,14 +2366,14 @@ wheels = [
 
 [[package]]
 name = "typing-inspection"
-version = "0.4.0"
+version = "0.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/82/5c/e6082df02e215b846b4b8c0b887a64d7d08ffaba30605502639d44c06b82/typing_inspection-0.4.0.tar.gz", hash = "sha256:9765c87de36671694a67904bf2c96e395be9c6439bb6c87b5142569dcdd65122", size = 76222 }
+sdist = { url = "https://files.pythonhosted.org/packages/55/e3/70399cb7dd41c10ac53367ae42139cf4b1ca5f36bb3dc6c9d33acdb43655/typing_inspection-0.4.2.tar.gz", hash = "sha256:ba561c48a67c5958007083d386c3295464928b01faa735ab8547c5692e87f464", size = 75949 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/31/08/aa4fdfb71f7de5176385bd9e90852eaf6b5d622735020ad600f2bab54385/typing_inspection-0.4.0-py3-none-any.whl", hash = "sha256:50e72559fcd2a6367a19f7a7e610e6afcb9fac940c650290eed893d61386832f", size = 14125 },
+    { url = "https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl", hash = "sha256:4ed1cacbdc298c220f1bd249ed5287caa16f34d44ef4e9c3d0cbad5b521545e7", size = 14611 },
 ]
 
 [[package]]

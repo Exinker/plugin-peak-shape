@@ -24,7 +24,7 @@ dependencies = [
     "pyside6==6.8.1",
     "setuptools>=75.8.0",
     "spectrumapp",
-    "spectrumlab-tiny",
+    "spectrumlab==0.8.2",
 ]
 requires-python = ">=3.12"
 
@@ -58,5 +58,6 @@ where = ["src"]
 "*" = ["*.csv", "*.md", "*.txt", "*.xml"]
 
 [tool.uv.sources]
-spectrumlab-tiny = { git = "https://github.com/Exinker/spectrumlab-tiny", rev = "53a398f" }
+spectrumlab = { git = "https://github.com/Exinker/spectrumlab" }
+# spectrumlab = { path = "C:/Users/Exinker/Documents/spectrumlab", editable = true }
 spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "master" }
