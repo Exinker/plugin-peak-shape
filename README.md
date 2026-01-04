@@ -5,7 +5,7 @@
 
 ## Author Information:
 Павел Ващенко (vaschenko@vmk.ru)
-[ВМК-Оптоэлектроника](https://www.vmk.ru/), г. Новосибирск 2024 г.
+[ВМК-Оптоэлектроника](https://www.vmk.ru/), г. Новосибирск 2026 г.
 
 ## Installation
 
@@ -28,21 +28,21 @@
 ### ENV
 Преременные окружения плагина:
 - `LOGGING_LEVEL: 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' = 'INFO'` - уровень логгирования;
-- `MAX_WORKERS: int = 1` - указать количество процессоров (для параллельных вычислений);
+- `MAX_WORKERS: int = 1` - количество процессов (для параллельных вычислений);
 
-Преременные окружения алгоритма поиска пиков:
-- `DRAFT_PEAK_N_COUNTS_MIN=10` - минимальное количество отсчетов пика;
-- `DRAFT_PEAK_N_COUNTS_MAX=100` - максимальное количество отсчетов пика;
-- `DRAFT_PEAK_EXCEPT_CLIPPED_PEAK=True` - исключить пики с "зашкаленными" отсчетами;
-- `DRAFT_PEAK_EXCEPT_WIDE_PEAK=False` - исключить пики с шириной больше установленной;
-- `DRAFT_PEAK_EXCEPT_SLOPED_PEAK=True` - исключить пики с наклоном больше установленного;
-- `DRAFT_PEAK_EXCEPT_EDGES=False` - исключить крайние отсчеты пика;
-- `DRAFT_PEAK_AMPLITUDE_MIN=0` - минимальная амплатуда пика;
-- `DRAFT_PEAK_WIDTH_MAX=3.5` - максимальная ширина пика;
-- `DRAFT_PEAK_SLOPE_MAX=.25` - максимальный уровень наклона пика;
-- `DRAFT_PEAK_NOISE_LEVEL=10` - уровень амплитуды пика относительно шума;
+Преременные окружения алгоритма поиска пиков в спектре:
+- `DRAFT_BLINKS_N_COUNTS_MIN=10` - минимальное количество отсчетов пика;
+- `DRAFT_BLINKS_N_COUNTS_MAX=100` - максимальное количество отсчетов пика;
+- `DRAFT_BLINKS_EXCEPT_CLIPPED_PEAK=True` - исключить пики с "зашкаленными" отсчетами;
+- `DRAFT_BLINKS_EXCEPT_WIDE_PEAK=False` - исключить пики с шириной больше `DRAFT_BLINKS_WIDTH_MAX`;
+- `DRAFT_BLINKS_EXCEPT_SLOPED_PEAK=True` - исключить пики с наклоном больше `DRAFT_BLINKS_SLOPE_MAX`;
+- `DRAFT_BLINKS_EXCEPT_EDGES=False` - исключить крайние отсчеты пика;
+- `DRAFT_BLINKS_AMPLITUDE_MIN=0` - минимальная амплатуда пика;
+- `DRAFT_BLINKS_WIDTH_MAX=3.5` - максимальная ширина пика;
+- `DRAFT_BLINKS_SLOPE_MAX=.25` - максимальный уровень наклона пика;
+- `DRAFT_BLINKS_NOISE_LEVEL=10` - уровень амплитуды пика относительно шума;
 
-Преременные окружения алгоритма вычисления формы контура пика:
+Преременные окружения алгоритма вычисления формы контура пика в спектре:
 - `RETRIEVE_SHAPE_DEFAULT=2;0;.1` - форма контура пика по умолчанию;
 - `RETRIEVE_SHAPE_MIN_WIDTH` - минимальная ширина формы контура пика;
 - `RETRIEVE_SHAPE_MAX_WIDTH` - максимальная ширина формы контура пика;

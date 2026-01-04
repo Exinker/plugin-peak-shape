@@ -1484,7 +1484,7 @@ requires-dist = [
     { name = "pyside6", specifier = "==6.8.1" },
     { name = "setuptools", specifier = ">=75.8.0" },
     { name = "spectrumapp", git = "https://github.com/Exinker/spectrumapp?rev=master" },
-    { name = "spectrumlab", directory = "../../spectrumlab" },
+    { name = "spectrumlab", git = "https://github.com/Exinker/spectrumlab" },
 ]
 
 [package.metadata.requires-dev]
@@ -2245,8 +2245,8 @@ dependencies = [
 
 [[package]]
 name = "spectrumlab"
-version = "0.8.0a25"
-source = { directory = "../../spectrumlab" }
+version = "0.8.2"
+source = { git = "https://github.com/Exinker/spectrumlab#16b24b1340994a379b112df6e49c4add9002c1f5" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
@@ -2255,43 +2255,6 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "scipy" },
     { name = "tqdm" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib", specifier = ">=3.9.0" },
-    { name = "numpy", specifier = ">=2.1.3" },
-    { name = "pandas", specifier = ">=2.2.3" },
-    { name = "pydantic", specifier = "==2.11.1" },
-    { name = "pydantic-settings", specifier = "==2.8.1" },
-    { name = "scipy", specifier = ">=1.14.1" },
-    { name = "tqdm", specifier = ">=4.67.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "flake8" },
-    { name = "flake8-bugbear" },
-    { name = "flake8-builtins" },
-    { name = "flake8-commas" },
-    { name = "flake8-import-order" },
-    { name = "jupyter", specifier = ">=1.1.1" },
-    { name = "pep8-naming" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-]
-linting = [
-    { name = "flake8" },
-    { name = "flake8-bugbear" },
-    { name = "flake8-builtins" },
-    { name = "flake8-commas" },
-    { name = "flake8-import-order" },
-    { name = "pep8-naming" },
-]
-notebook = [{ name = "jupyter", specifier = ">=1.1.1" }]
-testing = [
-    { name = "pytest" },
-    { name = "pytest-cov" },
 ]
 
 [[package]]
