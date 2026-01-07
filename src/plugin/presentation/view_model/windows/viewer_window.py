@@ -12,7 +12,7 @@ import plugin
 from spectrumapp.helpers import find_tab, getdefault_object_name
 from spectrumapp.types import Lims
 from spectrumapp.widgets.graph_widget import MplCanvas
-from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import Canvas, CANVAS
+from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import Canvas
 
 
 DEFAULT_SIZE = QtCore.QSize(640, 480)
@@ -354,8 +354,8 @@ class ViewWidget(QtWidgets.QWidget):
     def canvas(self) -> Canvas:
 
         return {
-            'spectrum': self.spectrum_view_widget.figure.gca(),
-            'shape': self.shape_view_widget.figure.gca(),
+            'left': self.spectrum_view_widget.figure.gca(),
+            'right': self.shape_view_widget.figure.gca(),
         }
 
     def update(self) -> None:
@@ -460,8 +460,6 @@ class ViewerWindow(QtWidgets.QWidget):
         self.show()
 
     def show(self) -> None:
-        CANVAS.set(self.content_widget.canvas)
-
         super().show()
 
     def update(self, n: int) -> None:

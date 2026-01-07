@@ -10,12 +10,17 @@ from plugin.presentation.view_model.windows import (
     ProgressBarWindow,
     ViewerWindow,
 )
+from spectrumapp.helpers import find_window
+from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import (
+    SPECTRUM_CANVAS,
+    SPECTRUM_INDEX,
+)
 from spectrumlab.spectra import Spectrum
 
 LOGGER = logging.getLogger('plugin-peak-shape')
 
 
-def progress_wrapper(func: Callable):
+def progress_create(func: Callable):
 
     @wraps(func)
     def wrapper(*args, spectra: Mapping[int, Spectrum], **kwargs):
@@ -38,14 +43,37 @@ def progress_wrapper(func: Callable):
                 **kwargs,
                 progress_callback=window.update,
             )
+
         except Exception:
             raise
+
         else:
             if isinstance(window, ViewerWindow):
                 app.exec()
-
             return result
+
         finally:
             app.quit()
+
+    return wrapper
+
+
+def progress_setup(func: Callable):
+
+    @wraps(func)
+    def wrapper(__args):
+        n, _ = __args
+
+        window = find_window('progressWindow')
+        if isinstance(window, ViewerWindow):
+            SPECTRUM_CANVAS.set(window.content_widget.canvas[n])
+            SPECTRUM_INDEX.set(n)
+
+        try:
+            result = func(__args)
+            return result
+
+        except Exception:
+            raise
 
     return wrapper

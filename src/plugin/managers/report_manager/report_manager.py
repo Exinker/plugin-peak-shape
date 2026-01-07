@@ -1,9 +1,7 @@
 from collections.abc import Mapping, Sequence
 from typing import Any, NewType
 
-from plugin.config import (
-    PluginConfig,
-)
+from plugin.config import PluginConfig
 from spectrumlab.peaks.analyte_peaks.shapes import PeakShape
 from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import RETRIEVE_SHAPE_CONFIG
 

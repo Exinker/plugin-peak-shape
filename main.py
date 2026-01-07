@@ -13,6 +13,7 @@ sys.path.extend([
 ])
 
 import plugin
+from plugin import Plugin
 from plugin.config import PLUGIN_CONFIG
 from plugin.loggers import *
 from plugin.types import XML
@@ -21,7 +22,7 @@ from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import RETRIEVE_SHAPE
 
 
 LOGGER = logging.getLogger('plugin-peak-shape')
-PLUGIN = plugin.plugin_factory()
+PLUGIN = Plugin.create()
 
 
 def process_xml(config_xml: XML) -> str:

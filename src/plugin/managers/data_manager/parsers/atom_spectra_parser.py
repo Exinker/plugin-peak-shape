@@ -75,6 +75,7 @@ def parse_n_detectors(__probe: XML) -> int:
 
     try:
         return int(__probe.find(xpath).text)
+
     except Exception:
         LOGGER.error("Parse `n_detectors` is failed. Check xpath: %r", xpath)
         raise
@@ -85,6 +86,7 @@ def parse_detector_size(__probe: XML) -> int:
 
     try:
         return int(__probe.find(xpath).text)
+
     except Exception:
         LOGGER.error("Parse `detector_size` is failed. Check xpath: %r", xpath)
         raise
@@ -95,6 +97,7 @@ def parse_n_frames(__probe: XML) -> int:
 
     try:
         return int(__probe.find(xpath).text)
+
     except Exception:
         LOGGER.error("Parse `detector_size` is failed. Check xpath: %r", xpath)
 
@@ -108,6 +111,7 @@ def parse_wavelength(__probe: XML) -> Array[float]:
 
     try:
         return numpy_array_from_b64(__probe.find(xpath).text, dtype=np.double)
+
     except Exception:
         LOGGER.error("Parse `wavelength` is failed. Check xpath: %r", xpath)
         raise
@@ -118,6 +122,7 @@ def parse_intensity(__probe: XML) -> Array[float]:
 
     try:
         return numpy_array_from_b64(__probe.find(xpath).text, dtype=np.double)
+
     except Exception:
         LOGGER.error("Parse `intensity` is failed. Check xpath: %r", xpath)
         raise
@@ -130,6 +135,7 @@ def parse_clipped(__probe: XML, n_numbers: int) -> Array[bool]:
     try:
         mask[numpy_array_from_b64(__probe.find(xpath).text, dtype=np.int32)] = True
         return mask
+
     except Exception:
         LOGGER.error("Parse `intensity` is failed. Check xpath: %r", xpath)
 
@@ -148,6 +154,7 @@ def parse_selected_detectors(__crystals: XML | None) -> Sequence[int]:
             item.attrib['val']
             for item in __crystals.findall('item')
         ]))
+
     except Exception:
         LOGGER.warning("Parse `selected_crystals` is failed. Check xpath: %r", 'crystals')
         return []
