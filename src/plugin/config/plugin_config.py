@@ -5,9 +5,6 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-DEFAULT_MAX_WORKERS = 1
-
-
 class LoggingLevel(Enum):
 
     DEBUG = 'DEBUG'
@@ -19,7 +16,7 @@ class LoggingLevel(Enum):
 class PluginConfig(BaseSettings):
 
     logging_level: LoggingLevel = Field(LoggingLevel.INFO, alias='LOGGING_LEVEL')
-    max_workers: int = Field(DEFAULT_MAX_WORKERS, ge=1, le=multiprocessing.cpu_count(), alias='MAX_WORKERS')
+    max_workers: int = Field(1, ge=1, le=multiprocessing.cpu_count(), alias='MAX_WORKERS')
     skip_data_exceptions: bool = Field(False, alias='SKIP_DATA_EXCEPTIONS')
 
     model_config = SettingsConfigDict(

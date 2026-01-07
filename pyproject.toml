@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "peak-shape-plugin"
+name = "plugin"
 version = "0.3.3"
 description = "Atom plugin to retrieve peak's shape."
 readme = "README.md"
@@ -48,7 +48,6 @@ dev = [
     {include-group = "linting"},
     {include-group = "testing"},
     {include-group = "notebook"},
-    "pre-commit>=4.0.1",
 ]
 
 [tool.setuptools.packages.find]

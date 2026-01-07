@@ -7,7 +7,7 @@ import pkg_resources
 from .plugin import Plugin
 
 
-distribution = pkg_resources.get_distribution('peak_shape_plugin')
+distribution = pkg_resources.get_distribution('plugin')
 __name__ = 'peak-shape-plugin'
 __version__ = distribution.version
 __author__ = 'Pavel Vaschenko'
