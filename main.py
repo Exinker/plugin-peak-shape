@@ -1,10 +1,7 @@
-import logging
 import os
 import subprocess
 from pathlib import Path
 
-
-LOGGER = logging.getLogger('plugin-peak-shape')
 ROOT = Path(__file__).parent.resolve()
 
 
@@ -38,12 +35,11 @@ def process_xml(config_xml: str) -> str:
         )
         return process.stdout.strip()
 
-    except subprocess.CalledProcessError as error:
-        LOGGER.error('%r', error)
+    except subprocess.CalledProcessError:
         raise
 
 
 if __name__ == '__main__':
     result = process_xml(
-        config_xml=r'<input>C:\Atom x64 3.3 (2025.05.14)\Temp\py_spe.xml</input>',
+        config_xml=r'<input>C:\Atom x64 3.3 (2025.11.14)\Temp\py_spe.xml</input>',
     )
