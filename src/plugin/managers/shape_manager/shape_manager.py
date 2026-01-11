@@ -4,12 +4,12 @@ from collections.abc import Mapping
 
 from plugin.config import PluginConfig
 from plugin.managers.shape_manager.core import retrieve_shapes
-from spectrumlab.peaks.analyte_peaks.shapes import PeakShape
+from plugin.presentation import progress_create
 from plugin.presentation.callbacks import (
     NullProgressCallback,
     ProgressCallbackABC,
 )
-from plugin.presentation import progress_create
+from spectrumlab.peaks.analyte_peaks.shapes import PeakShape
 from spectrumlab.spectra import Spectrum
 
 LOGGER = logging.getLogger('plugin-peak-shape')

@@ -27,11 +27,11 @@ class ReportManager:
     ) -> str:
 
         results = []
-        for n, shape in shapes.items():
+        for detector_id, shape in shapes.items():
             is_default = shape == RETRIEVE_SHAPE_CONFIG.default_shape
 
             result = dict(
-                index=n,
+                index=detector_id,
                 result=not is_default,
                 width=shape.width,
                 asymmetry=shape.asymmetry,

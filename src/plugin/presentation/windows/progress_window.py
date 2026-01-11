@@ -60,9 +60,9 @@ class ProgressWindow(QtWidgets.QWidget):
         # show window
         self.show()
 
-    def update(self, n: int):
+    def update(self, __detector_id: int):
 
-        progress = 100*n/self.total
+        progress = 100 * __detector_id / self.total
         widget = self.findChild(QtWidgets.QProgressBar, 'progressBar')
         widget.setValue(progress)
 
@@ -70,8 +70,8 @@ class ProgressWindow(QtWidgets.QWidget):
         widget = self.findChild(QtWidgets.QLabel, 'infoLabel')
         widget.setText(info)
 
-        message = 'RETRIEVE PEAK\'S SHAPE: {n}/{total} is complited!'.format(
-            n=n,
+        message = 'RETRIEVE PEAK\'S SHAPE: {detector_id}/{total} is complited!'.format(
+            detector_id=__detector_id,
             total=self.total,
         )
         widget = self.findChild(QtWidgets.QLabel, 'messageLabel')

@@ -18,11 +18,11 @@ LOGGER = logging.getLogger('plugin-peak-shape')
 
 @progress_setup
 def retrieve_shape(__args) -> PeakShape:
-    n, spectrum = __args
+    detector_id, spectrum = __args
 
     LOGGER.debug(
         'detector %02d - retrieve peak\'s shape',
-        n+1,
+        detector_id+1,
     )
     try:
         peaks = draft_blinks(
@@ -35,20 +35,20 @@ def retrieve_shape(__args) -> PeakShape:
         shape = PeakShape(
             width=shape.width,
             asymmetry=shape.asymmetry,
-            ratio=(1 - shape.ratio),  # Atom's lagacy: never change it!
+            ratio=(1 - shape.ratio),  # Atom3.3 legacy!
         )
 
     except Exception as error:
         LOGGER.warning(
             'detector %02d - shape is not retrieved: %r',
-            n+1,
+            detector_id+1,
             error,
         )
         return RETRIEVE_SHAPE_CONFIG.default_shape
 
     LOGGER.info(
         'detector %02d - shape is retrieved: %s',
-        n+1,
+        detector_id+1,
         shape,
     )
     return shape
@@ -68,11 +68,11 @@ def retrieve_shapes(
         )
 
     shapes = {}
-    for n, spectrum in spectra.items():
-        shape = retrieve_shape((n, spectrum))
+    for detector_id, spectrum in spectra.items():
+        shape = retrieve_shape((detector_id, spectrum))
 
-        shapes[n] = shape
-        progress_callback(n=n)
+        shapes[detector_id] = shape
+        progress_callback(detector_id)
 
     return shapes
 
@@ -85,14 +85,14 @@ def retrieve_shapes_multiprocess(
 
     shapes = {}
     with Pool(n_workers) as pool:
-        for n, shape in enumerate(pool.imap(
+        for detector_id, shape in enumerate(pool.imap(
             retrieve_shape,
             [
-                (n, spectrum)
-                for n, spectrum in spectra.items()
+                (detector_id, spectrum)
+                for detector_id, spectrum in spectra.items()
             ],
         )):
-            shapes[n] = shape
-            progress_callback(n=n)
+            shapes[detector_id] = shape
+            progress_callback(detector_id)
 
     return shapes

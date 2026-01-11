@@ -363,7 +363,7 @@ class PreviewWindow(QtWidgets.QWidget):
     def __init__(
         self,
         *args,
-        indexes: Sequence[int],
+        detector_ids: Sequence[int],
         flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ) -> None:
@@ -403,8 +403,8 @@ class PreviewWindow(QtWidgets.QWidget):
         layout.setSpacing(5)
 
         self.content = QtWidgets.QTabWidget()
-        for index in indexes:
-            self.content.addTab(PreviewWidget(parent=self), ' {:>2} '.format(index+1))
+        for detector_id in detector_ids:
+            self.content.addTab(PreviewWidget(parent=self), self.get_tab_name(detector_id))
         layout.addWidget(self.content)
 
         # geometry
@@ -416,12 +416,21 @@ class PreviewWindow(QtWidgets.QWidget):
     def show(self) -> None:
         super().show()
 
-    def update(self, n: int) -> None:
+    def update(self, __detector_id: int) -> None:
 
-        self.content.setCurrentIndex(n)
+        widget = self.get_widget(__detector_id)
+        self.content.setCurrentWidget(widget)
 
         app = QtWidgets.QApplication.instance()
         app.processEvents()
+
+    def get_tab_name(self, __id: int) -> str:
+        return ' {:>2} '.format(__id + 1)
+
+    def get_widget(self, __detector_id: int) -> PreviewWidget:
+
+        widget = find_tab(self.content, self.get_tab_name(__detector_id))
+        return widget
 
     def closeEvent(self, event):  # noqa: N802
 

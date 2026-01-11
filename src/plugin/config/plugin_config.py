@@ -13,10 +13,18 @@ class LoggingLevel(Enum):
     ERROR = 'ERROR'
 
 
+class ViewMode(Enum):
+
+    PREVIEW = 'PREVIEW'
+    PROGRESS = 'PROGRESS'
+
+
 class PluginConfig(BaseSettings):
 
     logging_level: LoggingLevel = Field(LoggingLevel.INFO, alias='LOGGING_LEVEL')
+    view_mode: ViewMode = Field(ViewMode.PREVIEW, alias='VIEW_MODE')
     max_workers: int = Field(1, ge=1, le=multiprocessing.cpu_count(), alias='MAX_WORKERS')
+
     skip_data_exceptions: bool = Field(False, alias='SKIP_DATA_EXCEPTIONS')
 
     model_config = SettingsConfigDict(

@@ -5,7 +5,7 @@ from typing import Callable
 
 from PySide6 import QtWidgets
 
-from plugin.config import PLUGIN_CONFIG
+from plugin.config import ViewMode, PLUGIN_CONFIG
 from plugin.presentation.windows import (
     PreviewWindow,
     ProgressWindow,
@@ -27,14 +27,22 @@ def progress_create(func: Callable):
 
         app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
-        if PLUGIN_CONFIG.max_workers == 1:
-            window = PreviewWindow(
-                indexes=tuple(spectra.keys()),
-            )
-        else:
-            window = ProgressWindow(
-                total=len(spectra),
-            )
+        match PLUGIN_CONFIG.view_mode:
+
+            case ViewMode.PREVIEW:
+                if PLUGIN_CONFIG.max_workers == 1:
+                    window = PreviewWindow(
+                        detector_ids=tuple(spectra.keys()),
+                    )
+                else:
+                    window = ProgressWindow(
+                        total=len(spectra),
+                    )
+
+            case ViewMode.PROGRESS:
+                window = ProgressWindow(
+                    total=len(spectra),
+                )
 
         try:
             result = func(
@@ -62,14 +70,14 @@ def progress_setup(func: Callable):
 
     @wraps(func)
     def wrapper(__args):
-        n, _ = __args
+        detector_id, _ = __args
 
         window = find_window('previewWindow')
         if window:
-            widget = window.content.widget(n)
+            widget = window.get_widget(detector_id)
 
             RETRIEVE_SHAPE_AXES.set(widget.axes)
-            RETRIEVE_SHAPE_INDEX.set(n)
+            RETRIEVE_SHAPE_INDEX.set(detector_id)
 
         try:
             result = func(__args)
