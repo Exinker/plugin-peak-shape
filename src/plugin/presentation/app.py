@@ -12,8 +12,8 @@ from plugin.presentation.windows import (
 )
 from spectrumapp.helpers import find_window
 from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import (
-    SPECTRUM_CANVAS,
-    SPECTRUM_INDEX,
+    RETRIEVE_SHAPE_AXES,
+    RETRIEVE_SHAPE_INDEX,
 )
 from spectrumlab.spectra import Spectrum
 
@@ -66,8 +66,10 @@ def progress_setup(func: Callable):
 
         window = find_window('previewWindow')
         if window:
-            SPECTRUM_CANVAS.set(window.content_widget.canvas[n])
-            SPECTRUM_INDEX.set(n)
+            widget = window.content.widget(n)
+
+            RETRIEVE_SHAPE_AXES.set(widget.axes)
+            RETRIEVE_SHAPE_INDEX.set(n)
 
         try:
             result = func(__args)

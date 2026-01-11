@@ -6,8 +6,8 @@ from plugin import Plugin
 from plugin.config import PLUGIN_CONFIG
 from plugin.loggers import *
 from plugin.types import XML
-from spectrumlab.peaks.blink_peaks.draft_blinks import DRAFT_BLINKS_CONFIG
 from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import RETRIEVE_SHAPE_CONFIG
+from spectrumlab.peaks.blink_peaks.draft_blinks import DRAFT_BLINKS_CONFIG
 
 
 LOGGER = logging.getLogger('plugin-peak-shape')

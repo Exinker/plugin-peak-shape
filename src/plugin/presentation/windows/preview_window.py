@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, NewType
 
 from PySide6 import QtCore, QtGui, QtWidgets
+from matplotlib.axes import Axes
 from matplotlib.backend_bases import KeyEvent, MouseEvent, PickEvent
 from matplotlib.figure import Figure
 
@@ -12,7 +13,6 @@ import plugin
 from spectrumapp.helpers import find_tab, getdefault_object_name
 from spectrumapp.types import Lims
 from spectrumapp.widgets.graph_widget import MplCanvas
-from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import Canvas
 
 
 DEFAULT_SIZE = QtCore.QSize(640, 480)
@@ -351,57 +351,11 @@ class PreviewWidget(QtWidgets.QWidget):
         layout.addWidget(self.shape_view_widget)
 
     @property
-    def canvas(self) -> Canvas:
-
+    def axes(self) -> Mapping[str, Axes]:
         return {
             'left': self.spectrum_view_widget.figure.gca(),
             'right': self.shape_view_widget.figure.gca(),
         }
-
-    def update(self) -> None:
-
-        content_widget = self.parent().parent()  # FIXME
-        content_widget.setCurrentWidget(self)
-
-        self.spectrum_view_widget.update()
-        self.shape_view_widget.update()
-
-
-class ContentWidget(QtWidgets.QTabWidget):
-
-    def __init__(
-        self,
-        *args,
-        indexes: Sequence[int],
-        **kwargs,
-    ) -> None:
-        super().__init__(*args, **kwargs)
-
-        self.indexes = indexes
-
-        for index in indexes:
-            self.addTab(PreviewWidget(), self.get_tab_name(index))
-
-    @property
-    def canvas(self) -> Sequence[Canvas]:
-
-        canvas = {}
-        for n, index in enumerate(self.indexes):
-            canvas[index] = self.widget(n).canvas
-
-        return canvas
-
-    def update(self, n: int) -> None:
-
-        widget = find_tab(self, text=self.get_tab_name(n))
-        widget.update()
-
-    @staticmethod
-    def get_tab_name(__index: int) -> str:
-
-        return ' {n:>2} '.format(
-            n=__index + 1,
-        )
 
 
 class PreviewWindow(QtWidgets.QWidget):
@@ -448,10 +402,10 @@ class PreviewWindow(QtWidgets.QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self.content_widget = ContentWidget(
-            indexes=indexes,
-        )
-        layout.addWidget(self.content_widget)
+        self.content = QtWidgets.QTabWidget()
+        for index in indexes:
+            self.content.addTab(PreviewWidget(parent=self), ' {:>2} '.format(index+1))
+        layout.addWidget(self.content)
 
         # geometry
         self.setFixedSize(self.sizeHint())
@@ -464,9 +418,7 @@ class PreviewWindow(QtWidgets.QWidget):
 
     def update(self, n: int) -> None:
 
-        self.content_widget.update(
-            n=n,
-        )
+        self.content.setCurrentIndex(n)
 
         app = QtWidgets.QApplication.instance()
         app.processEvents()
