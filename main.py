@@ -43,3 +43,4 @@ if __name__ == '__main__':
     result = process_xml(
         config_xml=r'<input>C:\Atom x64 3.3 (2025.11.14)\Temp\py_spe.xml</input>',
     )
+    print(result)

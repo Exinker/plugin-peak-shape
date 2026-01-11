@@ -7,7 +7,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 import plugin
 
 
-class ProgressBarWindow(QtWidgets.QWidget):
+class ProgressWindow(QtWidgets.QWidget):
 
     def __init__(
         self,

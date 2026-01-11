@@ -6,9 +6,9 @@ from typing import Callable
 from PySide6 import QtWidgets
 
 from plugin.config import PLUGIN_CONFIG
-from plugin.presentation.view_model.windows import (
-    ProgressBarWindow,
-    ViewerWindow,
+from plugin.presentation.windows import (
+    PreviewWindow,
+    ProgressWindow,
 )
 from spectrumapp.helpers import find_window
 from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import (
@@ -28,11 +28,11 @@ def progress_create(func: Callable):
         app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
         if PLUGIN_CONFIG.max_workers == 1:
-            window = ViewerWindow(
+            window = PreviewWindow(
                 indexes=tuple(spectra.keys()),
             )
         else:
-            window = ProgressBarWindow(
+            window = ProgressWindow(
                 total=len(spectra),
             )
 
@@ -48,7 +48,7 @@ def progress_create(func: Callable):
             raise
 
         else:
-            if isinstance(window, ViewerWindow):
+            if isinstance(window, PreviewWindow):
                 app.exec()
             return result
 
@@ -64,8 +64,8 @@ def progress_setup(func: Callable):
     def wrapper(__args):
         n, _ = __args
 
-        window = find_window('progressWindow')
-        if isinstance(window, ViewerWindow):
+        window = find_window('previewWindow')
+        if window:
             SPECTRUM_CANVAS.set(window.content_widget.canvas[n])
             SPECTRUM_INDEX.set(n)
 

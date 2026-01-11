@@ -322,19 +322,19 @@ class BaseGraphWidget(QtWidgets.QWidget):
         return self.canvas.figure
 
 
-class SpectrumViewWidget(BaseGraphWidget):
+class SpectrumWidget(BaseGraphWidget):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, size=QtCore.QSize(960, 480), **kwargs)
 
 
-class ShapeViewWidget(BaseGraphWidget):
+class ShapeWidget(BaseGraphWidget):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, size=QtCore.QSize(480, 480), **kwargs)
 
 
-class ViewWidget(QtWidgets.QWidget):
+class PreviewWidget(QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -344,10 +344,10 @@ class ViewWidget(QtWidgets.QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self.spectrum_view_widget = SpectrumViewWidget()
+        self.spectrum_view_widget = SpectrumWidget()
         layout.addWidget(self.spectrum_view_widget)
 
-        self.shape_view_widget = ShapeViewWidget()
+        self.shape_view_widget = ShapeWidget()
         layout.addWidget(self.shape_view_widget)
 
     @property
@@ -380,7 +380,7 @@ class ContentWidget(QtWidgets.QTabWidget):
         self.indexes = indexes
 
         for index in indexes:
-            self.addTab(ViewWidget(), self.get_tab_name(index))
+            self.addTab(PreviewWidget(), self.get_tab_name(index))
 
     @property
     def canvas(self) -> Sequence[Canvas]:
@@ -404,7 +404,7 @@ class ContentWidget(QtWidgets.QTabWidget):
         )
 
 
-class ViewerWindow(QtWidgets.QWidget):
+class PreviewWindow(QtWidgets.QWidget):
 
     def __init__(
         self,
@@ -415,7 +415,7 @@ class ViewerWindow(QtWidgets.QWidget):
     ) -> None:
         super().__init__(*args, **kwargs)
 
-        self.setObjectName('progressWindow')
+        self.setObjectName('previewWindow')
 
         # title
         self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))

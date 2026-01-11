@@ -2,8 +2,8 @@ import logging
 from collections.abc import Mapping
 from multiprocessing import Pool
 
+from plugin.presentation import progress_setup
 from plugin.presentation.callbacks import ProgressCallbackABC
-from plugin.presentation.view_model import progress_setup
 from spectrumlab.peaks.analyte_peaks.shapes.peak_shape import PeakShape
 from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import (
     RETRIEVE_SHAPE_CONFIG,
