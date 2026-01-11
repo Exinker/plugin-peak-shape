@@ -47,3 +47,13 @@ All notable changes to this project will be documented in this file.
 * multiprocessing with progress bar window
 * default shape
 * overlay spectrum and shape figures
+
+
+## [1.0.0] - 2025-01-11
+
+### Refac
+* update dependencies (spectrumlab)
+
+### Added
+* add tests
+* run in subprocess

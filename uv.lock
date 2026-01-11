@@ -1862,7 +1862,7 @@ wheels = [
 
 [[package]]
 name = "plugin"
-version = "1.0.0a0"
+version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "spectrumapp" },
