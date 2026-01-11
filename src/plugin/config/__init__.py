@@ -1,6 +1,6 @@
-from .plugin_config import PluginConfig, PLUGIN_CONFIG
+from .plugin_config import PluginConfig, ViewMode, PLUGIN_CONFIG
 
 
 __all__ = [
-    PluginConfig, PLUGIN_CONFIG,
+    PluginConfig, ViewMode, PLUGIN_CONFIG,
 ]

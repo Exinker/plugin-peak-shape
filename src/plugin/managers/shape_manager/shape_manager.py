@@ -2,12 +2,13 @@ import logging
 import time
 from collections.abc import Mapping
 
-from plugin.config import (
-    PluginConfig,
-)
+from plugin.config import PluginConfig
 from plugin.managers.shape_manager.core import retrieve_shapes
-from plugin.presentation.callbacks import AbstractProgressCallback, NullProgressCallback
-from plugin.presentation.view_model import progress_wrapper
+from plugin.presentation import progress_create
+from plugin.presentation.callbacks import (
+    NullProgressCallback,
+    ProgressCallbackABC,
+)
 from spectrumlab.peaks.analyte_peaks.shapes import PeakShape
 from spectrumlab.spectra import Spectrum
 
@@ -23,11 +24,11 @@ class ShapeManager:
 
         self.plugin_config = plugin_config
 
-    @progress_wrapper
+    @progress_create
     def retrieve(
         self,
         spectra: Mapping[int, Spectrum],
-        progress_callback: AbstractProgressCallback | None = None,
+        progress_callback: ProgressCallbackABC | None = None,
     ) -> Mapping[int, PeakShape]:
         progress_callback = progress_callback or NullProgressCallback()
         started_at = time.perf_counter()
@@ -43,6 +44,7 @@ class ShapeManager:
                 progress_callback=progress_callback,
             )
             return shapes
+
         finally:
             if LOGGER.isEnabledFor(logging.INFO):
                 LOGGER.info(

@@ -4,10 +4,10 @@ from datetime import datetime
 
 import pkg_resources
 
-from .plugin import plugin_factory
+from .plugin import Plugin
 
 
-distribution = pkg_resources.get_distribution('peak_shape_plugin')
+distribution = pkg_resources.get_distribution('plugin')
 __name__ = 'peak-shape-plugin'
 __version__ = distribution.version
 __author__ = 'Pavel Vaschenko'
@@ -17,5 +17,5 @@ __license__ = 'MIT'
 __copyright__ = 'Copyright {}, {}'.format(datetime.now().year, __organization__)
 
 __all__ = [
-    plugin_factory,
+    Plugin,
 ]

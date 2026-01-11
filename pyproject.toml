@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "peak-shape-plugin"
-version = "0.3.3"
+name = "plugin"
+version = "1.0.0"
 description = "Atom plugin to retrieve peak's shape."
 readme = "README.md"
 keywords = [
@@ -21,10 +21,8 @@ maintainers = [
 ]
 license = {text = "MIT License"}
 dependencies = [
-    "pyside6==6.8.1",
-    "setuptools>=75.8.0",
     "spectrumapp",
-    "spectrumlab==0.8.2",
+    "spectrumlab",
 ]
 requires-python = ">=3.12"
 
@@ -40,6 +38,10 @@ linting = [
 testing = [
     "pytest",
     "pytest-cov",
+    "pytest-faker>=2.0.0",
+    "pytest-repeat>=0.9.4",
+    "pytest-qt>=4.5.0",
+    "spectrumlab_emulations",
 ]
 notebook = [
     "jupyter>=1.1.1",
@@ -48,7 +50,6 @@ dev = [
     {include-group = "linting"},
     {include-group = "testing"},
     {include-group = "notebook"},
-    "pre-commit>=4.0.1",
 ]
 
 [tool.setuptools.packages.find]
@@ -58,6 +59,6 @@ where = ["src"]
 "*" = ["*.csv", "*.md", "*.txt", "*.xml"]
 
 [tool.uv.sources]
-spectrumlab = { git = "https://github.com/Exinker/spectrumlab" }
-# spectrumlab = { path = "C:/Users/Exinker/Documents/spectrumlab", editable = true }
 spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "master" }
+spectrumlab = { git = "https://github.com/Exinker/spectrumlab", rev = "0.9.0" }
+spectrumlab_emulations = { git = "https://github.com/Exinker/spectrumlab-emulations", rev = "0.1.2" }

@@ -24,11 +24,14 @@ class DataManager:
         started_at = time.perf_counter()
         try:
             filepath = FilepathParser.parse(xml)
+
         except ParseFilepathXMLError as error:
             LOGGER.error('%r', error)
             raise
+
         else:
             LOGGER.info('Filepath to data: %r', filepath)
+
         finally:
             if LOGGER.isEnabledFor(logging.INFO):
                 LOGGER.info(
@@ -41,8 +44,10 @@ class DataManager:
         try:
             data = AtomDataParser.parse(filepath)
             return data
+
         except (LoadDataXMLError, ParseDataXMLError) as error:
             raise DataManagerError from error
+
         finally:
             if LOGGER.isEnabledFor(logging.INFO):
                 LOGGER.info(

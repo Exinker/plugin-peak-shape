@@ -1,12 +1,8 @@
 import multiprocessing
-from collections.abc import Sequence
 from enum import Enum
 
-from pydantic import Field, field_validator
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-
-DEFAULT_MAX_WORKERS = 1
 
 
 class LoggingLevel(Enum):
@@ -17,10 +13,18 @@ class LoggingLevel(Enum):
     ERROR = 'ERROR'
 
 
+class ViewMode(Enum):
+
+    PREVIEW = 'PREVIEW'
+    PROGRESS = 'PROGRESS'
+
+
 class PluginConfig(BaseSettings):
 
     logging_level: LoggingLevel = Field(LoggingLevel.INFO, alias='LOGGING_LEVEL')
-    max_workers: int = Field(DEFAULT_MAX_WORKERS, ge=1, le=multiprocessing.cpu_count(), alias='MAX_WORKERS')
+    view_mode: ViewMode = Field(ViewMode.PREVIEW, alias='VIEW_MODE')
+    max_workers: int = Field(1, ge=1, le=multiprocessing.cpu_count(), alias='MAX_WORKERS')
+
     skip_data_exceptions: bool = Field(False, alias='SKIP_DATA_EXCEPTIONS')
 
     model_config = SettingsConfigDict(

@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, NewType
 
 from PySide6 import QtCore, QtGui, QtWidgets
+from matplotlib.axes import Axes
 from matplotlib.backend_bases import KeyEvent, MouseEvent, PickEvent
 from matplotlib.figure import Figure
 
@@ -12,7 +13,6 @@ import plugin
 from spectrumapp.helpers import find_tab, getdefault_object_name
 from spectrumapp.types import Lims
 from spectrumapp.widgets.graph_widget import MplCanvas
-from spectrumlab.peaks.analyte_peaks.shapes.retrieve_shape import Canvas, CANVAS
 
 
 DEFAULT_SIZE = QtCore.QSize(640, 480)
@@ -322,19 +322,19 @@ class BaseGraphWidget(QtWidgets.QWidget):
         return self.canvas.figure
 
 
-class SpectrumViewWidget(BaseGraphWidget):
+class SpectrumWidget(BaseGraphWidget):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, size=QtCore.QSize(960, 480), **kwargs)
 
 
-class ShapeViewWidget(BaseGraphWidget):
+class ShapeWidget(BaseGraphWidget):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, size=QtCore.QSize(480, 480), **kwargs)
 
 
-class ViewWidget(QtWidgets.QWidget):
+class PreviewWidget(QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -344,78 +344,32 @@ class ViewWidget(QtWidgets.QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self.spectrum_view_widget = SpectrumViewWidget()
+        self.spectrum_view_widget = SpectrumWidget()
         layout.addWidget(self.spectrum_view_widget)
 
-        self.shape_view_widget = ShapeViewWidget()
+        self.shape_view_widget = ShapeWidget()
         layout.addWidget(self.shape_view_widget)
 
     @property
-    def canvas(self) -> Canvas:
-
+    def axes(self) -> Mapping[str, Axes]:
         return {
-            'spectrum': self.spectrum_view_widget.figure.gca(),
-            'shape': self.shape_view_widget.figure.gca(),
+            'left': self.spectrum_view_widget.figure.gca(),
+            'right': self.shape_view_widget.figure.gca(),
         }
 
-    def update(self) -> None:
 
-        content_widget = self.parent().parent()  # FIXME
-        content_widget.setCurrentWidget(self)
-
-        self.spectrum_view_widget.update()
-        self.shape_view_widget.update()
-
-
-class ContentWidget(QtWidgets.QTabWidget):
+class PreviewWindow(QtWidgets.QWidget):
 
     def __init__(
         self,
         *args,
-        indexes: Sequence[int],
-        **kwargs,
-    ) -> None:
-        super().__init__(*args, **kwargs)
-
-        self.indexes = indexes
-
-        for index in indexes:
-            self.addTab(ViewWidget(), self.get_tab_name(index))
-
-    @property
-    def canvas(self) -> Sequence[Canvas]:
-
-        canvas = {}
-        for n, index in enumerate(self.indexes):
-            canvas[index] = self.widget(n).canvas
-
-        return canvas
-
-    def update(self, n: int) -> None:
-
-        widget = find_tab(self, text=self.get_tab_name(n))
-        widget.update()
-
-    @staticmethod
-    def get_tab_name(__index: int) -> str:
-
-        return ' {n:>2} '.format(
-            n=__index + 1,
-        )
-
-
-class ViewerWindow(QtWidgets.QWidget):
-
-    def __init__(
-        self,
-        *args,
-        indexes: Sequence[int],
+        detector_ids: Sequence[int],
         flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
 
-        self.setObjectName('progressWindow')
+        self.setObjectName('previewWindow')
 
         # title
         self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
@@ -448,10 +402,10 @@ class ViewerWindow(QtWidgets.QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self.content_widget = ContentWidget(
-            indexes=indexes,
-        )
-        layout.addWidget(self.content_widget)
+        self.content = QtWidgets.QTabWidget()
+        for detector_id in detector_ids:
+            self.content.addTab(PreviewWidget(parent=self), self.get_tab_name(detector_id))
+        layout.addWidget(self.content)
 
         # geometry
         self.setFixedSize(self.sizeHint())
@@ -460,18 +414,23 @@ class ViewerWindow(QtWidgets.QWidget):
         self.show()
 
     def show(self) -> None:
-        CANVAS.set(self.content_widget.canvas)
-
         super().show()
 
-    def update(self, n: int) -> None:
+    def update(self, __detector_id: int) -> None:
 
-        self.content_widget.update(
-            n=n,
-        )
+        widget = self.get_widget(__detector_id)
+        self.content.setCurrentWidget(widget)
 
         app = QtWidgets.QApplication.instance()
         app.processEvents()
+
+    def get_tab_name(self, __id: int) -> str:
+        return ' {:>2} '.format(__id + 1)
+
+    def get_widget(self, __detector_id: int) -> PreviewWidget:
+
+        widget = find_tab(self.content, self.get_tab_name(__detector_id))
+        return widget
 
     def closeEvent(self, event):  # noqa: N802
 

@@ -1,6 +1,6 @@
-from plugin.config import (
-    PLUGIN_CONFIG,
-)
+from typing import Self
+
+from plugin.config import PLUGIN_CONFIG
 from plugin.exceptions import exception_wrapper
 from plugin.managers.data_manager import DataManager
 from plugin.managers.report_manager import ReportManager
@@ -8,26 +8,24 @@ from plugin.managers.shape_manager import ShapeManager
 from plugin.types import XML
 
 
-def plugin_factory() -> 'Plugin':
-
-    data_manager = DataManager()
-    shape_manager = ShapeManager(
-        plugin_config=PLUGIN_CONFIG,
-    )
-    report_manager = ReportManager(
-        plugin_config=PLUGIN_CONFIG,
-    )
-
-    return Plugin(
-        data_manager=data_manager,
-        shape_manager=shape_manager,
-        report_manager=report_manager,
-    )
-
-
 class Plugin:
 
-    create = plugin_factory
+    @classmethod
+    def create(cls) -> Self:
+
+        data_manager = DataManager()
+        shape_manager = ShapeManager(
+            plugin_config=PLUGIN_CONFIG,
+        )
+        report_manager = ReportManager(
+            plugin_config=PLUGIN_CONFIG,
+        )
+
+        return cls(
+            data_manager=data_manager,
+            shape_manager=shape_manager,
+            report_manager=report_manager,
+        )
 
     def __init__(
         self,
