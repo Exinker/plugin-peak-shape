@@ -28,7 +28,6 @@ def process_xml(config_xml: str) -> str:
                 config_xml,
             ],
             capture_output=True,
-            creationflags=subprocess.CREATE_NO_WINDOW,
             text=True,
             check=True,
             cwd=ROOT,

@@ -1892,7 +1892,7 @@ requires-dist = [
     { name = "pyside6", specifier = "==6.8.1" },
     { name = "setuptools", specifier = ">=75.8.0" },
     { name = "spectrumapp", git = "https://github.com/Exinker/spectrumapp?rev=master" },
-    { name = "spectrumlab", editable = "../../spectrumlab" },
+    { name = "spectrumlab", editable = "../../../../Users/Exinker/Documents/spectrumlab" },
 ]
 
 [package.metadata.requires-dev]
@@ -2671,7 +2671,7 @@ dependencies = [
 [[package]]
 name = "spectrumlab"
 version = "0.8.3"
-source = { editable = "../../spectrumlab" }
+source = { editable = "../../../../Users/Exinker/Documents/spectrumlab" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },

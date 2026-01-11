@@ -1,12 +1,9 @@
 import os
-import pickle
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from multiprocessing import Queue
 from pathlib import Path
 from typing import Any, NewType
 
-import matplotlib.pyplot as plt
 from PySide6 import QtCore, QtGui, QtWidgets
 from matplotlib.backend_bases import KeyEvent, MouseEvent, PickEvent
 from matplotlib.figure import Figure
@@ -320,6 +317,10 @@ class BaseGraphWidget(QtWidgets.QWidget):
             lims=self._cropped_lims,
         )
 
+    @property
+    def figure(self) -> Figure:
+        return self.canvas.figure
+
 
 class SpectrumViewWidget(BaseGraphWidget):
 
@@ -350,20 +351,20 @@ class ViewWidget(QtWidgets.QWidget):
         layout.addWidget(self.shape_view_widget)
 
     @property
-    def canvas(self) -> Sequence[Canvas]:
+    def canvas(self) -> Canvas:
 
-        return tuple([
-            self.spectrum_view_widget.canvas,
-            self.shape_view_widget.canvas,
-        ])
+        return {
+            'left': self.spectrum_view_widget.figure.gca(),
+            'right': self.shape_view_widget.figure.gca(),
+        }
 
     def update(self) -> None:
 
         content_widget = self.parent().parent()  # FIXME
         content_widget.setCurrentWidget(self)
 
-        # self.spectrum_view_widget.update()
-        # self.shape_view_widget.update()
+        self.spectrum_view_widget.update()
+        self.shape_view_widget.update()
 
 
 class ContentWidget(QtWidgets.QTabWidget):
@@ -384,11 +385,11 @@ class ContentWidget(QtWidgets.QTabWidget):
     @property
     def canvas(self) -> Sequence[Canvas]:
 
-        canvas = []
-        for n in self.indexes:
-            canvas.append(self.widget(n).canvas)
+        canvas = {}
+        for n, index in enumerate(self.indexes):
+            canvas[index] = self.widget(n).canvas
 
-        return tuple(canvas)
+        return canvas
 
     def update(self, n: int) -> None:
 
@@ -409,7 +410,6 @@ class ViewerWindow(QtWidgets.QWidget):
         self,
         *args,
         indexes: Sequence[int],
-        queue: Queue,
         flags: Mapping[QtCore.Qt.WindowType, bool] | None = None,
         **kwargs,
     ) -> None:
@@ -456,30 +456,8 @@ class ViewerWindow(QtWidgets.QWidget):
         # geometry
         self.setFixedSize(self.sizeHint())
 
-        # queue
-        self.queue = queue
-
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.check_queue)
-        self.timer.start(100)
-
         # show window
         self.show()
-
-    def check_queue(self) -> None:
-
-        while not self.queue.empty():
-            n, data = self.queue.get_nowait()
-            fig = pickle.loads(data)
-
-            for canvas, axes in zip(self.content_widget.canvas[n], fig.get_axes()):
-                _update_axes(canvas.figure.gca(), axes=axes)
-
-                canvas.draw()
-
-            self.update(n)
-
-            plt.close(fig)
 
     def show(self) -> None:
         super().show()
@@ -497,43 +475,3 @@ class ViewerWindow(QtWidgets.QWidget):
 
         self.setParent(None)
         event.accept()
-
-
-def _update_axes(__ax, axes):
-
-    __ax.clear()
-
-    for line in axes.get_lines():
-        __ax.plot(
-            line.get_xdata(),
-            line.get_ydata(),
-            color=line.get_color(),
-            linestyle=line.get_linestyle(),
-            linewidth=line.get_linewidth(),
-            marker=line.get_marker(),
-            markersize=line.get_markersize(),
-            alpha=line.get_alpha(),
-            label=line.get_label(),
-        )
-
-    for collection in axes.collections:
-        if hasattr(collection, 'get_offsets'):
-            offsets = collection.get_offsets()
-            if len(offsets) > 0:
-                __ax.scatter(
-                    offsets[:, 0],
-                    offsets[:, 1],
-                    c=collection.get_facecolor(),
-                    s=collection.get_sizes(),
-                    alpha=collection.get_alpha(),
-                    label=collection.get_label() if hasattr(collection, 'get_label') else None,
-                )
-
-    __ax.set_xlabel(axes.get_xlabel())
-    __ax.set_ylabel(axes.get_ylabel())
-    __ax.set_title(axes.get_title())
-    __ax.set_xlim(axes.get_xlim())
-    __ax.set_ylim(axes.get_ylim())
-
-    if axes.get_legend():
-        __ax.legend()

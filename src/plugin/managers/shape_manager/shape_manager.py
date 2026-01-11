@@ -1,7 +1,6 @@
 import logging
 import time
 from collections.abc import Mapping
-from multiprocessing import Queue
 
 from plugin.config import PluginConfig
 from plugin.managers.shape_manager.core import retrieve_shapes
@@ -30,7 +29,6 @@ class ShapeManager:
         self,
         spectra: Mapping[int, Spectrum],
         progress_callback: ProgressCallbackABC | None = None,
-        progress_queue: Queue = None,
     ) -> Mapping[int, PeakShape]:
         progress_callback = progress_callback or NullProgressCallback()
         started_at = time.perf_counter()
@@ -44,7 +42,6 @@ class ShapeManager:
                 n_workers=self.plugin_config.max_workers,
                 spectra=spectra,
                 progress_callback=progress_callback,
-                progress_queue=progress_queue,
             )
             return shapes
 
