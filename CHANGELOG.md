@@ -57,3 +57,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 * add tests
 * run in subprocess
+
+
+## [1.1.0] - 2025-01-17
+
+### Refac
+* update dependencies (spectrumapp)
+
+### Added
+* report issue window

@@ -10,6 +10,7 @@ atom/
 build/
 data/
 dist/
+dumps/
 htmlcov/
 spd/
 tests/
@@ -21,6 +22,7 @@ tests/
 *.in
 *.ipynb
 *.xml
+settings.ini
 
 .*.py
 .*.json
