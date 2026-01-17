@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "plugin"
-version = "1.0.0"
+version = "1.1.0"
 description = "Atom plugin to retrieve peak's shape."
 readme = "README.md"
 keywords = [
@@ -59,6 +59,6 @@ where = ["src"]
 "*" = ["*.csv", "*.md", "*.txt", "*.xml"]
 
 [tool.uv.sources]
-spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "master" }
+spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "1.1.1" }
 spectrumlab = { git = "https://github.com/Exinker/spectrumlab", rev = "0.9.0" }
 spectrumlab_emulations = { git = "https://github.com/Exinker/spectrumlab-emulations", rev = "0.1.2" }

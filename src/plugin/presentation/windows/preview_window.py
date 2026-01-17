@@ -1,6 +1,8 @@
 import os
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from datetime import datetime
+from itertools import chain
 from pathlib import Path
 from typing import Any, NewType
 
@@ -10,9 +12,14 @@ from matplotlib.backend_bases import KeyEvent, MouseEvent, PickEvent
 from matplotlib.figure import Figure
 
 import plugin
-from spectrumapp.helpers import find_tab, getdefault_object_name
+from plugin.config import TELEGRAM_CONFIG
+from spectrumapp.helpers import find_tab, find_window, getdefault_object_name
 from spectrumapp.types import Lims
 from spectrumapp.widgets.graph_widget import MplCanvas
+from spectrumapp.windows.report_issue_window import ReportIssueWindow
+from spectrumapp.windows.report_issue_window.archive_managers import ZipArchiveManager
+from spectrumapp.windows.report_issue_window.archive_managers.utils import explore
+from spectrumapp.windows.report_issue_window.report_managers import TelegramReportManager
 
 
 DEFAULT_SIZE = QtCore.QSize(640, 480)
@@ -374,6 +381,13 @@ class PreviewWindow(QtWidgets.QWidget):
         # title
         self.setWindowTitle(' '.join(map(lambda x: x.capitalize(), plugin.__name__.split('-'))))
 
+        # actions
+        action = QtGui.QAction('&Report Issue', self)
+        action.setShortcut(QtGui.QKeySequence('Ctrl+Shift+I'))
+        action.setShortcutContext(QtCore.Qt.ApplicationShortcut)
+        action.triggered.connect(self.on_report_issue_window_opened)
+        self.addAction(action)
+
         # flags
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.CustomizeWindowHint)
 
@@ -412,6 +426,44 @@ class PreviewWindow(QtWidgets.QWidget):
 
         # show window
         self.show()
+
+    def on_report_issue_window_opened(self, *args, **kwargs):
+        """Report an issue."""
+
+        window = find_window('reportIssueWindow')
+        if window is not None:
+            window.show()
+        else:
+
+            timestamp = datetime.timestamp(datetime.now())
+            window = ReportIssueWindow(
+                application_name=plugin.__name__,
+                application_version=plugin.__version__,
+                timestamp=timestamp,
+                archive_manager=ZipArchiveManager(
+                    files=chain(
+                        explore([
+                            Path.cwd() / '.env',
+                            Path.cwd() / '.log',
+                            Path.cwd() / 'pyproject.toml',
+                            Path.cwd() / 'uv.lock',
+                        ], prefix=Path.cwd()),
+                        explore([
+                            Path.cwd().parents[2] / 'Temp' / 'py_spe.xml',
+                        ], prefix=Path.cwd().parents[2] / 'Temp'),
+                    ),
+                    archive_name='{}'.format(int(timestamp)),
+                ),
+                report_manager=TelegramReportManager.create(
+                    application_name=plugin.__name__,
+                    application_version=plugin.__version__,
+                    timestamp=timestamp,
+                    token=TELEGRAM_CONFIG.token.get_secret_value(),
+                    chat_id=TELEGRAM_CONFIG.chat_id,
+                ),
+                parent=self,
+                flags=QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint,
+            )
 
     def show(self) -> None:
         super().show()

@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--config',
         help='XML with config',
-        default=r'<input>C:\Atom x64 3.3 (2025.11.14)\Temp\py_spe.xml</input>',
+        default=r'<input>C:\Atom x64 3.3 (2025.11.15)\Temp\py_spe.xml</input>',
     )
     args = parser.parse_args()
 
