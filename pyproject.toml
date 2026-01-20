@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "plugin"
-version = "1.1.1"
+version = "1.1.2"
 description = "Atom plugin to retrieve peak's shape."
 readme = "README.md"
 keywords = [
@@ -21,6 +21,7 @@ maintainers = [
 ]
 license = {text = "MIT License"}
 dependencies = [
+    "setuptools>=80.9.0",
     "spectrumapp",
     "spectrumlab",
 ]
