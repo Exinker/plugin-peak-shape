@@ -1850,9 +1850,10 @@ wheels = [
 
 [[package]]
 name = "plugin"
-version = "1.1.1"
+version = "1.1.2"
 source = { editable = "." }
 dependencies = [
+    { name = "setuptools" },
     { name = "spectrumapp" },
     { name = "spectrumlab" },
 ]
@@ -1895,6 +1896,7 @@ testing = [
 
 [package.metadata]
 requires-dist = [
+    { name = "setuptools", specifier = ">=80.9.0" },
     { name = "spectrumapp", git = "https://github.com/Exinker/spectrumapp?rev=1.1.1" },
     { name = "spectrumlab", git = "https://github.com/Exinker/spectrumlab?rev=0.9.0" },
 ]
