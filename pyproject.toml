@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "plugin"
-version = "1.1.2"
+version = "1.1.3"
 description = "Atom plugin to retrieve peak's shape."
 readme = "README.md"
 keywords = [
@@ -42,7 +42,7 @@ testing = [
     "pytest-faker>=2.0.0",
     "pytest-repeat>=0.9.4",
     "pytest-qt>=4.5.0",
-    "spectrumlab_emulations",
+    # "spectrumlab_emulations",
 ]
 notebook = [
     "jupyter>=1.1.1",
@@ -61,5 +61,7 @@ where = ["src"]
 
 [tool.uv.sources]
 spectrumapp = { git = "https://github.com/Exinker/spectrumapp", rev = "1.1.1" }
-spectrumlab = { git = "https://github.com/Exinker/spectrumlab", rev = "0.9.0" }
-spectrumlab_emulations = { git = "https://github.com/Exinker/spectrumlab-emulations", rev = "0.1.2" }
+spectrumlab = { git = "https://github.com/Exinker/spectrumlab", rev = "0.9.1" }
+# spectrumlab = { path = "C:\\Users\\Exinker\\Documents\\spectrumlab", editable = true }
+spectrumlab_emulations = { git = "https://github.com/Exinker/spectrumlab-emulations", rev = "0.1.3" }
+# spectrumlab_emulations = { path = "C:/Users/Exinker/Documents/spectrumlab-emulations", editable = true }

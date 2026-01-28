@@ -1,15 +1,14 @@
 """Atom plugin to retrieve peak's shape."""
 
 from datetime import datetime
+from importlib.metadata import version
 
-import pkg_resources
 
 from .plugin import Plugin
 
 
-distribution = pkg_resources.get_distribution('plugin')
 __name__ = 'peak-shape-plugin'
-__version__ = distribution.version
+__version__ = version('plugin')
 __author__ = 'Pavel Vaschenko'
 __email__ = 'vaschenko@vmk.ru'
 __organization__ = 'VMK-Optoelektronika'
