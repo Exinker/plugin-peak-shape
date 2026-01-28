@@ -51,3 +51,9 @@
 - `RETRIEVE_SHAPE_ERROR_MEAN=.0001` - среднее отклонение пика от формы;
 - `RETRIEVE_SHAPE_N_PEAKS_FILTRATED_BY_WIDTH=None` - фильтрация пиков по ширине;
 - `RETRIEVE_SHAPE_N_PEAKS_MIN=10` - минимальное количество пиков;
+
+## Deployment
+Для создания дистрибутива выполните в рабочей директории PowerShell скрипт:
+```powershell
+.\scripts\build.ps1
+```
