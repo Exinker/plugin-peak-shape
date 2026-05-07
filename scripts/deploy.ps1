@@ -30,13 +30,26 @@ $pluginPath = "$rootPath\plugin-peak-shape"
 
 # Extracting a source code
 Write-Host "Extracting plugin's source code..." -ForegroundColor Yellow
+$zipPath = Join-Path $PSScriptRoot "plugin.zip"
+if (-not (Test-Path $zipPath)) {
+    Write-Host "Error: File '$zipPath' not found! Build the project first." -ForegroundColor Red
+    exit 1
+}
 
 New-Item -ItemType Directory -Path "$pluginPath" -Force
 
-Expand-Archive -Path "$PSScriptRoot\plugin.zip" -DestinationPath "$rootPath\temp" -Force
-$extractedFolder = Get-ChildItem -Path "$rootPath\temp" -Directory | Select-Object -First 1
+$tempPath = Join-Path $rootPath "temp"
+Expand-Archive -Path $zipPath -DestinationPath $tempPath -Force
+
+$extractedFolder = Get-ChildItem -Path $tempPath -Directory | Select-Object -First 1
+if ($null -eq $extractedFolder) {
+    Write-Host "Error: Extraction failed or zip is empty." -ForegroundColor Red
+    Remove-Item -Path $tempPath -Recurse -Force
+    exit 1
+}
+
 Move-Item -Path "$($extractedFolder.FullName)\*" -Destination "$pluginPath" -Force
-Remove-Item -Path "$rootPath\temp" -Recurse -Force
+Remove-Item -Path $tempPath -Recurse -Force
 
 
 # Installing a plugin
